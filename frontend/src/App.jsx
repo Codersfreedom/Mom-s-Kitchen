@@ -1,11 +1,12 @@
 import './App.css'
+import AuthPage from './pages/AuthPage'
 
 function App() {
 
 
   return (
-    <div className='text-3xl text-blue-600'>
-      Home
+    <div className='min-h-screen w-screen'>
+      <AuthPage />
     </div>
   )
 }
