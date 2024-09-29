@@ -1,12 +1,20 @@
-import './App.css'
+import { Routes, Route } from 'react-router-dom'
 import AuthPage from './pages/AuthPage'
+import HomePage from './pages/HomePage'
+import './App.css'
 
 function App() {
 
 
   return (
     <div className='min-h-screen w-screen'>
-      <AuthPage />
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/auth' element={<AuthPage />} />
+
+
+      </Routes>
+      
     </div>
   )
 }
