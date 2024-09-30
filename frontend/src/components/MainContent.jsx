@@ -13,7 +13,7 @@ const MainContent = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
                 className='lg:h-60 h-48 w-full lg:w-72  sm:w-full    ' >
-                    <Link className='h-full w-full flex lg:flex-col gap-2 p-2'>
+                    <Link to={'/recipe/chicken'} className='h-full w-full flex lg:flex-col gap-2 p-2'>
                     
                 <Skeleton className='h-full lg:w-full w-2/3 md:w-1/2' isLoaded={true}>
                     <div className=' w-full h-full'>
