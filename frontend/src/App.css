@@ -22,3 +22,10 @@ input:user-valid{
     border: 2px solid blue;
 
 }
+
+li{
+    list-style: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+}
