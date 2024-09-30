@@ -21,8 +21,8 @@ const Header = () => {
 
     return (
         <div className='w-full relative h-20 bg-yellow-400 flex justify-between px-4 '>
-            {!isSearch && <div className=' h-full w-36 p-5 pl-6 '>
-                <Link to={'/'} className='text-xl  font-bold'>Let's Cook </Link>
+            {!isSearch && <div className=' h-full w-fit p-5 pl-6 '>
+                <Link to={'/'} className='text-xl  font-bold'>Mom's Kitchen </Link>
             </div>}
 
             {isSearch && <div className='relative w-5/6 h-full pl-10 pr-2  flex items-center'>
@@ -41,7 +41,7 @@ const Header = () => {
 
             <Menu ref={btnRef} onClick={onOpen} className=' lg:hidden md:hidden absolute left-2 top-5 cursor-pointer' size={30} />
 
-            <Sheet ref={btnRef} isOpen={isOpen} onClose={onClose} />
+            <Sheet btnRef={btnRef} isOpen={isOpen} onClose={onClose} />
 
         </div>
     )

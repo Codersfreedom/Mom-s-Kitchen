@@ -1,5 +1,6 @@
 import { Skeleton, SkeletonText } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
+import {Link} from 'react-router-dom';
 
 const MainContent = () => {
     return (
@@ -11,23 +12,26 @@ const MainContent = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
-                className='lg:h-60 h-48 w-full lg:w-72 flex lg:flex-col sm:w-full gap-2  p-2 ' >
-                <Skeleton className='h-full w-full' isLoaded={false}>
-                    <div className='lg:w-full w-1/2 h-full'>
+                className='lg:h-60 h-48 w-full lg:w-72  sm:w-full    ' >
+                    <Link className='h-full w-full flex lg:flex-col gap-2 p-2'>
+                    
+                <Skeleton className='h-full lg:w-full w-2/3 md:w-1/2' isLoaded={true}>
+                    <div className=' w-full h-full'>
                         <img src="Men jacket.avif" alt="jacket" className='w-full h-full' />
 
                     </div>
                 </Skeleton>
 
                 <SkeletonText
-                className='h-full '
-                isLoaded={false}
+                className='h-full pl-5 '
+                isLoaded={true}
                 
                 >
-                    <div className='p-3 h-full'>
+                    <div className='p-3 h-full w-full'>
                         <h2 className='text-xl font-bold text-center'>Men Jacket</h2>
                     </div>
                 </SkeletonText>
+                </Link>
             </motion.div>
       
 

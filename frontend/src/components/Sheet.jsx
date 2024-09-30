@@ -6,9 +6,10 @@ import {
     DrawerContent,
     DrawerCloseButton,
 } from '@chakra-ui/react'
+import { forwardRef } from 'react'
 import { Link } from 'react-router-dom'
 
-const Sheet = ({ ref, isOpen, onClose }) => {
+const Sheet = forwardRef(({ btnRef, isOpen, onClose }) => {
     return (
         <>
 
@@ -16,7 +17,7 @@ const Sheet = ({ ref, isOpen, onClose }) => {
                 isOpen={isOpen}
                 placement='left'
                 onClose={onClose}
-                finalFocusRef={ref}
+                finalFocusRef={btnRef}
             >
                 <DrawerOverlay />
                 <DrawerContent>
@@ -53,6 +54,6 @@ const Sheet = ({ ref, isOpen, onClose }) => {
             </Drawer>
         </>
     )
-}
+})
 
 export default Sheet
