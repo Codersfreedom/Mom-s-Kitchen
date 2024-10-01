@@ -180,7 +180,7 @@ const Recipe = () => {
 
             <h1 className="text-2xl font-semibold">You'll also love</h1>
 
-            <div className=" w-full grid gap-2 grid-cols-2 lg:grid-cols-4 py-3">
+            <div className=" w-full grid gap-2 grid-cols-2 lg:grid-cols-5 py-3">
                 <Link to={'/recipe/34234'} className="flex flex-col gap-3">
                     <div>
                         <img src="/1.webp" alt="" />

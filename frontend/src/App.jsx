@@ -5,6 +5,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import './App.css'
 import Recipe from './pages/Recipe'
+import Profile from './pages/Profile'
 
 function App() {
 
@@ -15,6 +16,8 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/auth' element={<AuthPage />} />
+        <Route path='/profile/:id' element={<Profile />} />
+
         <Route path='/recipe/:name' element={<Recipe />} />
 
       </Routes>
