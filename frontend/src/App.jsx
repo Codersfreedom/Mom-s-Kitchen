@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import './App.css'
 import Recipe from './pages/Recipe'
 import Profile from './pages/Profile'
+import PostRecipeForm from './pages/PostRecipeForm'
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/auth' element={<AuthPage />} />
         <Route path='/profile/:id' element={<Profile />} />
-
+        <Route path='/post' element={<PostRecipeForm />} />
         <Route path='/recipe/:name' element={<Recipe />} />
 
       </Routes>

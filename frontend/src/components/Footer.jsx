@@ -2,7 +2,7 @@ import { ArrowBigUp, Facebook, Instagram, Mail, Search, Twitter, Youtube } from 
 
 const Footer = () => {
     return (
-        <div className='h-72 w-full p-4 bg-black text-white flex flex-col gap-3 justify-between items-center'>
+        <div className='h-72 z-30 w-full p-4 bg-black text-white flex flex-col gap-3 justify-between items-center'>
             <div className='flex gap-3'>
                 <ArrowBigUp />
                 <p>BACK TO TOP</p>
