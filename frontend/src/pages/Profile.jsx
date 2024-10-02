@@ -2,6 +2,7 @@ import { Avatar, Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui
 import { ChevronDownIcon, Clock, LogOut } from 'lucide-react';
 import RecipeCard from '../components/RecipeCard';
 import useAuthStore from '../../store/useAuthStore';
+import { formatDate } from '../lib/utils';
 
 const Profile = () => {
     const {user,logout} = useAuthStore();
@@ -9,11 +10,11 @@ const Profile = () => {
     return (
         <div className='min-h-screen w-full'>
             <div className='w-full h-48 bg-gradient-to-t from-teal-400 to-yellow-200  ' >
-                <div className='float-end pr-5 pt-2 flex items-center gap-2 justify-center '>
-                    <Clock size={'20px'} /><p>  Joined 31st oct</p>
+                <div className='float-end lg:pr-10 pr-5 pt-2 flex items-center gap-2 justify-center '>
+                    <Clock size={'20px'} /><p>{formatDate(user.createdAt)}</p>
                     <LogOut size={'20px'} className='cursor-pointer' onClick={logout}  />
                 </div>
-                <div className='  flex gap-5 items-center  p-5 '>
+                <div className='  flex gap-5 items-center  p-10  '>
                     <div className='flex flex-col items-center'>
                         <Avatar src='/Men jacket.avif' name='' size={'xl'} />
                         <h2 className='font-semibold text-md'>{user?.name}</h2>

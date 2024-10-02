@@ -53,9 +53,19 @@ export const postRecipe = async (req, res) => {
     });
 
     await newRecipe.save();
-    res.status(201).json({ success: true, newRecipe });
+    res.status(201).json({ status: true, recipe: newRecipe });
   } catch (error) {
     console.log("error in recipe controller", error.message);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
+export const fetchRecipes = async (req, res) => {
+  try {
+    const recipes = await Recipe.find();
+    res.status(200).json({ status: true, recipes });
+  } catch (error) {
+    console.log("error in fetching recipe", error.message);
+    res.status(500).json({ status: false, message: "Internal server error" });
   }
 };

@@ -17,10 +17,10 @@ const PostRecipeForm = () => {
     cookTimeUnit: "",
     ingredients: [],
     directions: [],
-    visability: "",
+    visability: "public",
   })
 
-  const { postRecipe } = useRecipeStore()
+  const { postRecipe,isLoading } = useRecipeStore()
 
   const handleChange = (e) => {
     const field = e.target.name;
@@ -54,9 +54,22 @@ const PostRecipeForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    postRecipe(recipeData)
+    postRecipe(recipeData);
+    setRecipeData({
+      title: "",
+      description: "",
+      category: "",
+      image: "",
+      prepTime: "",
+      prepTimeUnit: "",
+      cookTime: "",
+      cookTimeUnit: "",
+      ingredients: [],
+      directions: [],
+      visability: "public",
+    })
   }
-
+console.log(recipeData)
 
   return (
     <div className="min-h-screen w-full flex justify-center ">
@@ -141,6 +154,7 @@ const PostRecipeForm = () => {
         </RadioGroup>
 
         <Button
+        isLoading={isLoading}
           type="submit"
           leftIcon={<Save />}
           colorScheme="yellow"

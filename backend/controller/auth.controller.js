@@ -5,7 +5,7 @@ import { User } from "../model/user.model.js";
 
 export const signup = async (req, res) => {
   const { email, name, password } = req.body;
-
+console.log(email,name,password)
   try {
     if (!email || !name || !password) {
       return res
@@ -47,9 +47,8 @@ export const signup = async (req, res) => {
     res.status(201).json({
       status: true,
       user: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
+        ...newUser._doc,
+        password: "",
       },
     });
   } catch (error) {
@@ -71,7 +70,7 @@ export const login = async (req, res) => {
     if (!user) {
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ status: false, message: "User not found" });
     }
 
     const isCorrectPassword = await bcrypt.compare(password, user.password);
@@ -79,7 +78,7 @@ export const login = async (req, res) => {
     if (!isCorrectPassword) {
       return res
         .status(400)
-        .json({ success: false, message: "Invalid credentials" });
+        .json({ status: false, message: "Invalid credentials" });
     }
 
     const secret = process.env.JWT_SECRET;
@@ -100,11 +99,10 @@ export const login = async (req, res) => {
     });
 
     res.status(200).json({
-      success: true,
+      status: true,
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
+        ...user._doc,
+        password: "",
       },
     });
   } catch (error) {
@@ -116,7 +114,7 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     res.clearCookie("moms-kitchen");
-    res.status(200).json({ success: true, message: "Logout sucess" });
+    res.status(200).json({ status: true, message: "Logout sucess" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
