@@ -1,5 +1,3 @@
-
-import AddRecipeBtn from "../components/AddRecipeBtn"
 import MainContent from "../components/MainContent"
 
 const HomePage = () => {

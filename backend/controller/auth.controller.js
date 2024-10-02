@@ -36,7 +36,7 @@ export const signup = async (req, res) => {
       expiresIn: "15d",
     });
 
-    res.cookie("cook", token, {
+    res.cookie("moms-kitchen", token, {
       maxAge: 15 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       sameSite: "strict",
@@ -92,11 +92,11 @@ export const login = async (req, res) => {
       { expiresIn: "15d" }
     );
 
-    res.cookie("cook", token, {
+    res.cookie("moms-kitchen", token, {
       maxAge: 15 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       sameSite: "strict",
-      secure: process.env.NODE_ENV != "development",
+      secure: process.env.NODE_ENV !== "development",
     });
 
     res.status(200).json({
@@ -115,10 +115,19 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.clearCookie("cook");
+    res.clearCookie("moms-kitchen");
     res.status(200).json({ success: true, message: "Logout sucess" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
+export const checkAuth = (req, res) => {
+  try {
+    return res.status(200).json({ user: req.user });
+  } catch (error) {
+    console.log("Error in checking auth controller");
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

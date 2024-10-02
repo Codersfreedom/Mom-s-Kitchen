@@ -1,6 +1,7 @@
 import { Button, FormLabel, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Select, Stack, TagLabel, Textarea } from "@chakra-ui/react"
 import { Save } from "lucide-react"
 import { useState } from "react"
+import useRecipeStore from "../../store/useRecipeStore"
 
 
 const PostRecipeForm = () => {
@@ -19,7 +20,7 @@ const PostRecipeForm = () => {
     visability: "",
   })
 
-
+  const { postRecipe } = useRecipeStore()
 
   const handleChange = (e) => {
     const field = e.target.name;
@@ -53,7 +54,7 @@ const PostRecipeForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(recipeData)
+    postRecipe(recipeData)
   }
 
 

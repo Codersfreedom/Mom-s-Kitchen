@@ -3,7 +3,7 @@ import { User } from "../model/user.model.js";
 
 export const protectRoute = async (req, res, next) => {
   try {
-    const token = req.cookies["cook"];
+    const token = req.cookies["moms-kitchen"];
 
     if (!token) {
       return res.status(402).json("Unauthorized no token found");

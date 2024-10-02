@@ -1,4 +1,3 @@
-import AddRecipeBtn from './AddRecipeBtn';
 import RecipeCard from './RecipeCard';
 
 const MainContent = () => {
@@ -10,7 +9,7 @@ const MainContent = () => {
         <RecipeCard />
         <RecipeCard />
         <RecipeCard />
-        <AddRecipeBtn />
+      
         </div>
     )
 }

@@ -18,6 +18,7 @@ const Sheet = forwardRef(({ btnRef, isOpen, onClose }) => {
                 placement='left'
                 onClose={onClose}
                 finalFocusRef={btnRef}
+            
             >
                 <DrawerOverlay />
                 <DrawerContent>
@@ -26,7 +27,10 @@ const Sheet = forwardRef(({ btnRef, isOpen, onClose }) => {
 
                     <DrawerBody>
                        
-                        <div className='flex flex-col gap-4 mt-7'>
+                        <div className=' mt-7'>
+                            <ul className='list-none text-xl font-semibold flex flex-col gap-4'>
+
+                           
                             <li>
                                 <Link to={'/'}>
                                     Home
@@ -39,7 +43,7 @@ const Sheet = forwardRef(({ btnRef, isOpen, onClose }) => {
                                 </Link>
 
                             </li>
-                            <li>Explore</li>
+                            <li><Link to={'/post'}>Post Recipe </Link></li>
                             <li>
                                 <Link to={'/profile'}>
 
@@ -47,6 +51,7 @@ const Sheet = forwardRef(({ btnRef, isOpen, onClose }) => {
                                 </Link>
                             </li>
                             <li>About</li>
+                            </ul>
                         </div>
                     </DrawerBody>
 

@@ -1,19 +1,22 @@
 import { Avatar, Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
-import { Bird, ChevronDownIcon, Clock } from 'lucide-react';
+import { ChevronDownIcon, Clock, LogOut } from 'lucide-react';
 import RecipeCard from '../components/RecipeCard';
+import useAuthStore from '../../store/useAuthStore';
 
 const Profile = () => {
+    const {user,logout} = useAuthStore();
+
     return (
         <div className='min-h-screen w-full'>
             <div className='w-full h-48 bg-gradient-to-t from-teal-400 to-yellow-200  ' >
-                <div className='float-end pr-4 pt-2 flex items-center gap-1 justify-center '>
-                    <Clock size={'15px'} /><p >  Joined 31st oct</p>
-
+                <div className='float-end pr-5 pt-2 flex items-center gap-2 justify-center '>
+                    <Clock size={'20px'} /><p>  Joined 31st oct</p>
+                    <LogOut size={'20px'} className='cursor-pointer' onClick={logout}  />
                 </div>
                 <div className='  flex gap-5 items-center  p-5 '>
-                    <div>
+                    <div className='flex flex-col items-center'>
                         <Avatar src='/Men jacket.avif' name='' size={'xl'} />
-                        <h2 className='font-semibold text-md'>@rakesh762</h2>
+                        <h2 className='font-semibold text-md'>{user?.name}</h2>
 
                     </div>
 
