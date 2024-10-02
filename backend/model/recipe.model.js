@@ -26,10 +26,6 @@ const RecipeSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    readyIn:{
-        type:String,
-        required:true
-    },
     ingredients:{
         type:Array,
         default:[],
