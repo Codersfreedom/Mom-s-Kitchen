@@ -14,10 +14,14 @@ const userSchema = mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
   },
-  favorites: {
-    type: Array,
-    default: [],
-  },
+  favorites: [
+    {
+      recipe: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Recipe",
+      },
+    },
+  ],
 });
 
-export const User = mongoose.model("User",userSchema)
+export const User = mongoose.model("User", userSchema);

@@ -5,18 +5,30 @@ import { Save } from "lucide-react"
 const PostRecipeForm = () => {
   return (
     <div className="min-h-screen w-full flex justify-center ">
-      <div className="h-full w-full flex flex-col gap-5 p-4 lg:w-1/2 ">
-        <Input placeholder="Recipe Title" />
-        <Textarea placeholder="Recipe Description" />
-        <Select variant={'filled'}>
-          <option value='option1'>Option 1</option>
-          <option value='option2'>Option 2</option>
-          <option value='option3'>Option 3</option>
+
+      <form className="h-full w-full flex flex-col gap-5 p-4 lg:w-1/2 ">
+
+
+        <Input placeholder="Recipe Title" required />
+        <Textarea placeholder="Recipe Description" required />
+        <Select variant={'filled'} required >
+          <option value='Breakfast' >Breakfast</option>
+          <option value='Lunch'>Lunch</option>
+          <option value='Dinner'>Dinner</option>
+          <option value='Dessert'>Dessert</option>
+          <option value='Main Dish'>Main Dish</option>
+          <option value='Salad'>Salad</option>
+          <option value='Snacks'>Snacks</option>
+          <option value='Side Dish'>Side Dish</option>
+          <option value='Soups'>Soups</option>
         </Select>
+
+        <FormLabel>Uploade Recipe Image:</FormLabel>
+        <Input type="file" accept="jpg" required />
 
         <FormLabel>Preparation Time:</FormLabel>
         <div className="flex gap-2">
-          <NumberInput>
+          <NumberInput required>
             <NumberInputField />
             <NumberInputStepper>
               <NumberIncrementStepper />
@@ -25,7 +37,7 @@ const PostRecipeForm = () => {
           </NumberInput>
 
 
-          <Select variant={'filled'}>
+          <Select variant={'filled'} required>
             <option value='option1'>Hours</option>
             <option value='option2'>Minutes</option>
             <option value='option3'>Days</option>
@@ -54,7 +66,7 @@ const PostRecipeForm = () => {
 
         </div>
         <FormLabel>Serves:</FormLabel>
-        <NumberInput>
+        <NumberInput required>
           <NumberInputField />
           <NumberInputStepper>
             <NumberIncrementStepper />
@@ -64,10 +76,10 @@ const PostRecipeForm = () => {
 
         <FormLabel >Ingredients: </FormLabel>
 
-        <Textarea placeholder="Ex:1 tsp Pepper" />
+        <Textarea placeholder="Ex:1 tsp Pepper" required />
 
         <FormLabel >Directions: </FormLabel>
-        <Textarea placeholder="Ex:Place all ingredients in blender" />
+        <Textarea placeholder="Ex:Place all ingredients in blender" required />
 
         <FormLabel >Save this recipe as: </FormLabel>
         <RadioGroup defaultValue='public'>
@@ -82,10 +94,12 @@ const PostRecipeForm = () => {
         </RadioGroup>
 
         <Button
+          type="submit"
           leftIcon={<Save />}
           colorScheme="yellow"
         >SAVE</Button>
-      </div>
+      </form>
+
     </div>
   )
 }
