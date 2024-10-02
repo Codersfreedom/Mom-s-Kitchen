@@ -1,4 +1,6 @@
+import Recipe from "../model/recipe.model.js";
 import { fetchFromEdamam } from "../services/axios.js";
+import cloudinary from "../services/cloudinary.js";
 
 export const searchRecipe = async (req, res) => {
   const { query } = req.params;
@@ -12,5 +14,50 @@ export const searchRecipe = async (req, res) => {
   } catch (error) {
     console.log("Error in recipe controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
+export const postRecipe = async (req, res) => {
+  const {
+    title,
+    description,
+    category,
+    image,
+    prepTime,
+    cookTime,
+    readyIn,
+    ingredients,
+    directions,
+    visability,
+  } = req.body;
+  try {
+    let cloudinaryResponse = null;
+
+    if (image) {
+      cloudinaryResponse = await cloudinary.uploader.upload(image, {
+        folder: "moms-kitchen",
+      });
+    }
+
+    const newRecipe = new Recipe({
+      title,
+      description,
+      category,
+      image: cloudinaryResponse?.secure_url
+        ? cloudinaryResponse.secure_url
+        : "",
+      prepTime,
+      cookTime,
+      readyIn,
+      ingredients,
+      directions,
+      visability,
+    });
+
+    await newRecipe.save();
+    res.status(201).json({ success: true, newRecipe });
+  } catch (error) {
+    console.log("error in recipe controller", error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
