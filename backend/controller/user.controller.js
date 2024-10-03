@@ -56,3 +56,15 @@ export const handleFollow = async (req, res) => {
     res.status(500).json({ status: false, message: "Internal server error" });
   }
 };
+
+export const getPostedRecipes = async (req, res) => {
+  try {
+    const user = req.user;
+    const recipes = await Recipe.find({ user: { $in: user._id } });
+
+    res.status(200).json({ status: true, recipes });
+  } catch (error) {
+    console.log("Error in user controller", error.message);
+    res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};

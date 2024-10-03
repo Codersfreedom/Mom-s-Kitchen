@@ -1,12 +1,24 @@
 import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@chakra-ui/react"
 import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, LogIn, Printer, Salad, Share, Smile, Star } from "lucide-react"
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { Link, useParams } from "react-router-dom"
+import useRecipeStore from "../../store/useRecipeStore"
 
 
 const Recipe = () => {
     const [isShowingReplies, setIsShowingReplies] = useState(false);
     const [isClickedReply, setIsClickedReply] = useState(false);
+    const [recipe, setRecipe] = useState({});
+    const { getRecipeById, isLoading } = useRecipeStore();
+
+    const { id } = useParams();
+
+    useEffect(() => {
+        const getRecipe = async () => {
+            setRecipe(await getRecipeById(id))
+        }
+        getRecipe();
+    }, [id])
 
     const handleReply = () => {
         if (!isClickedReply) {
@@ -17,7 +29,7 @@ const Recipe = () => {
     return (
         <div className="min-h-screen w-full p-5 ">
 
-            <h1 className="text-4xl font-bold">Recipe Name</h1>
+            <h1 className="text-4xl font-bold">{recipe?.title}</h1>
             <div className="flex gap-2 py-4">
                 <Star fill="yellow" />
                 <Star fill="yellow" />
@@ -27,10 +39,10 @@ const Recipe = () => {
             <hr />
             <div className="py-4 flex gap-2 items-center">
                 <Avatar src="/Men jacket.avif" />
-                <h2 className="text-2xl">Submitted by <Link to={'/profile/:id'} className="text-blue-400">John doe</Link> </h2>
+                <h2 className="text-2xl">Submitted by <Link to={`/profile/${recipe.user}`} className="text-blue-400">{recipe?.name || "No name"}</Link> </h2>
             </div>
             <Button colorScheme="yellow">Follow</Button>
-            <p className="text-xl py-4">"This is a sure fire method of making a tender pot roast every time."</p>
+            <p className="text-xl py-4">{recipe?.description}</p>
 
             <div className="flex gap-3 py-4">
                 <Button
@@ -56,7 +68,7 @@ const Recipe = () => {
             </div>
 
             <div className="lg:w-[800px] lg:h-[530px]">
-                <img src="/pot roast.webp" className=" h-full w-full  " alt="recipe_featured_image" />
+                <img src={recipe?.image} className=" h-full w-full  " alt="recipe_featured_image" />
             </div>
 
             <div className="grid grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-4 max-w-[800px] max-h-fit py-4">
@@ -86,8 +98,9 @@ const Recipe = () => {
             </div>
 
             <div className="flex flex-col gap-3 justify-center py-4">
-                <p className="flex  gap-2"> <Clock /> Ready In:4hr 10mins </p>
-                <p className="flex  gap-2"> <Salad /> Ingrediants:12 </p>
+                <p className="flex  gap-2"> <Clock />Prep In: {recipe?.prepTime} </p>
+                <p className="flex  gap-2"> <Clock />Ready In: {recipe?.cookTime} </p>
+                <p className="flex  gap-2"> <Salad /> Ingrediants: {recipe?.ingredients?.length} </p>
             </div>
             <h2 className="flex gap-2 text-md text-yellow-600 font-semibold"> <BicepsFlexed /> Nutrition information</h2>
             <div className="w-1/2 h-fit py-2">
@@ -103,15 +116,13 @@ const Recipe = () => {
             <h1 className="text-2xl">Ingredients</h1>
             <div>
                 <ol className="list-decimal list-inside">
-                    <li >
-                        Step 1
+                    {recipe && recipe?.ingredients?.map((item,idx)=>{
+                        return  <li key={idx} >
+                       {item.charAt(0).toUpperCase()+ item.substring(1)}
                     </li>
-                    <li>
-                        Step 2
-                    </li>
-                    <li>
-                        Step 3
-                    </li>
+                    })}
+                   
+                   
                 </ol>
             </div>
 
@@ -119,7 +130,10 @@ const Recipe = () => {
                 <h1 className="text-xl font-semibold"> Directions</h1>
 
                 <ol className="list-decimal list-inside">
-                    <li>First direction</li>
+                    {recipe&& recipe?.directions?.map((item,idx)=>{
+                        return <li key={idx} >{item}</li>
+                    })}
+                    
                 </ol>
 
             </div>
@@ -128,10 +142,10 @@ const Recipe = () => {
                 <h1 className="text-xl font-semibold">Questions & Replies</h1>
 
                 <div className="w-full lg:w-1/2 py-2 flex flex-col gap-3">
-                  <Input placeholder="ask a question" rounded={'15px'} />
-                <Button colorScheme="yellow" leftIcon={<LogIn />}> Sign in to ask a question</Button>  
+                    <Input placeholder="ask a question" rounded={'15px'} />
+                    <Button colorScheme="yellow" leftIcon={<LogIn />}> Sign in to ask a question</Button>
                 </div>
-                
+
 
                 <Card>
                     <CardHeader className="flex gap-4 items-center">

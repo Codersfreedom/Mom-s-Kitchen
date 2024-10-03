@@ -18,6 +18,7 @@ export const searchRecipe = async (req, res) => {
 };
 
 export const postRecipe = async (req, res) => {
+  const user = req.user;
   const {
     title,
     description,
@@ -39,6 +40,8 @@ export const postRecipe = async (req, res) => {
     }
 
     const newRecipe = new Recipe({
+      user:user._id,
+      name:user.name,
       title,
       description,
       category,
@@ -62,7 +65,7 @@ export const postRecipe = async (req, res) => {
 
 export const fetchAllRecipes = async (req, res) => {
   try {
-    const recipes = await Recipe.find();
+    const recipes = await Recipe.find({visability:'public'});
     res.status(200).json({ status: true, recipes });
   } catch (error) {
     console.log("error in fetching recipe", error.message);

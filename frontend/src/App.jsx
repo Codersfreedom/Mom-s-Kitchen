@@ -30,7 +30,7 @@ function App() {
         <Route path='/auth' element={!user ? <AuthPage /> : <Navigate to={'/'} />} />
         <Route path='/profile/:id' element={user ? <Profile /> : <Navigate to={'/auth'} />} />
         <Route path='/post' element={user ? <PostRecipeForm /> : <Navigate  to={'/auth'}/>} />
-        <Route path='/recipe/:name' element={<Recipe />} />
+        <Route path='/recipe/:id' element={<Recipe />} />
 
       </Routes>
       <Footer />

@@ -1,4 +1,3 @@
-
 import { create } from "zustand";
 
 const useRecipeStore = create((set) => ({
@@ -38,6 +37,25 @@ const useRecipeStore = create((set) => ({
         set({ recipe: data.recipes, isLoading: false });
       } else {
         throw new Error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+      set({ isLoading: false });
+    }
+  },
+  getRecipeById: async (id) => {
+    set({ isLoading: true });
+    try {
+      const response = await fetch(`/api/recipe/fetch/${id}`, {
+        method: "GET",
+      });
+      const recipe = await response.json();
+      if (recipe.status == true) {
+        set({ isLoading: false });
+        
+        return recipe.recipe;
+      } else {
+        throw new Error(recipe.message);
       }
     } catch (error) {
       console.log(error.message);
