@@ -1,11 +1,12 @@
 import express from 'express'
-import { fetchRecipes, postRecipe, searchRecipe } from '../controller/recipe.controller.js';
+import { fetchAllRecipes, fetchRecipe, postRecipe, searchRecipe } from '../controller/recipe.controller.js';
 import { protectRoute } from '../middleware/protectUser.js';
 
 const router = express.Router();
 
 router.get("/search/:query",searchRecipe);
-router.get("/fetchAll",fetchRecipes);
+router.get("/fetch/:id",fetchRecipe);
+router.get("/fetchAll",fetchAllRecipes);
 router.post("/post",protectRoute,postRecipe);
 
 export default router;
