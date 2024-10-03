@@ -1,7 +1,7 @@
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
   user: null,
   isLoading: false,
   isCheckingAuth: true,
@@ -69,6 +69,24 @@ const useAuthStore = create((set) => ({
       set({ user: data.user, isCheckingAuth: false });
     } catch (error) {
       set({ isCheckingAuth: false });
+    }
+  },
+
+  follow: async (id) => {
+    set({isLoading:true})
+    try {
+      const response = await fetch(`/api/user/follow/${id}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      if (data.status == true) {
+        set({ isLoading: false, user: data.user });
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+      set({isLoading:false})
     }
   },
 }));

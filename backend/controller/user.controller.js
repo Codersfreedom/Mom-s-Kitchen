@@ -35,6 +35,7 @@ export const addToFavorite = async (req, res) => {
 export const handleFollow = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const user = req.user;
 
     const isFollowing = await user.following.find((item) => item.id == id);
@@ -50,7 +51,7 @@ export const handleFollow = async (req, res) => {
     }
     await user.save();
     await otherUser.save();
-    res.status(200).json({ status: true, following: user.following });
+    res.status(200).json({ status: true,  user });
   } catch (error) {
     console.log("Error in user controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });

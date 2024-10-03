@@ -15,6 +15,7 @@ const useUserStore = create((set) => ({
       console.log(error.message);
     }
   },
+  
 }));
 
 export default useUserStore;

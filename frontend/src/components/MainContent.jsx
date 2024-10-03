@@ -10,7 +10,7 @@ const MainContent = () => {
     }, [getAllRecipes])
 
     if(isLoading) return;
-console.log(recipe)
+
     return (
         <div className=' min-h-screen w-full relative  p-3 grid grid-cols-1 lg:grid-cols-5 gap-3 '>
             {recipe.map((recipe)=>{

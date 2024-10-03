@@ -3,14 +3,16 @@ import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, LogIn, Printer,
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import useRecipeStore from "../../store/useRecipeStore"
+import useAuthStore from "../../store/useAuthStore"
 
 
 const Recipe = () => {
     const [isShowingReplies, setIsShowingReplies] = useState(false);
     const [isClickedReply, setIsClickedReply] = useState(false);
     const [recipe, setRecipe] = useState({});
-    const { getRecipeById, isLoading } = useRecipeStore();
+    const { getRecipeById } = useRecipeStore();
 
+    const { user, follow, isLoading } = useAuthStore();
     const { id } = useParams();
 
     useEffect(() => {
@@ -19,6 +21,8 @@ const Recipe = () => {
         }
         getRecipe();
     }, [id])
+
+    const isFollowing = user?.following?.find((item) => item.id == recipe?.id)
 
     const handleReply = () => {
         if (!isClickedReply) {
@@ -39,9 +43,9 @@ const Recipe = () => {
             <hr />
             <div className="py-4 flex gap-2 items-center">
                 <Avatar src="/Men jacket.avif" />
-                <h2 className="text-2xl">Submitted by <Link to={`/profile/${recipe.user}`} className="text-blue-400">{recipe?.name || "No name"}</Link> </h2>
+                <h2 className="text-2xl">Submitted by <Link to={`/profile/${recipe?.user}`} className="text-blue-400">{recipe?.name || "No name"}</Link> </h2>
             </div>
-            <Button colorScheme="yellow">Follow</Button>
+            <Button colorScheme="yellow" isLoading={isLoading} onClick={() => follow(recipe?.user)} >{isFollowing ? "Following" : "Follow"}</Button>
             <p className="text-xl py-4">{recipe?.description}</p>
 
             <div className="flex gap-3 py-4">
@@ -116,13 +120,13 @@ const Recipe = () => {
             <h1 className="text-2xl">Ingredients</h1>
             <div>
                 <ol className="list-decimal list-inside">
-                    {recipe && recipe?.ingredients?.map((item,idx)=>{
-                        return  <li key={idx} >
-                       {item.charAt(0).toUpperCase()+ item.substring(1)}
-                    </li>
+                    {recipe && recipe?.ingredients?.map((item, idx) => {
+                        return <li key={idx} >
+                            {item.charAt(0).toUpperCase() + item.substring(1)}
+                        </li>
                     })}
-                   
-                   
+
+
                 </ol>
             </div>
 
@@ -130,10 +134,10 @@ const Recipe = () => {
                 <h1 className="text-xl font-semibold"> Directions</h1>
 
                 <ol className="list-decimal list-inside">
-                    {recipe&& recipe?.directions?.map((item,idx)=>{
+                    {recipe && recipe?.directions?.map((item, idx) => {
                         return <li key={idx} >{item}</li>
                     })}
-                    
+
                 </ol>
 
             </div>
