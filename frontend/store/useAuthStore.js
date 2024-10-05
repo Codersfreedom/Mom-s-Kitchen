@@ -73,7 +73,7 @@ const useAuthStore = create((set, get) => ({
   },
 
   follow: async (id) => {
-    set({isLoading:true})
+    set({ isLoading: true });
     try {
       const response = await fetch(`/api/user/follow/${id}`, {
         method: "GET",
@@ -86,7 +86,24 @@ const useAuthStore = create((set, get) => ({
       }
     } catch (error) {
       console.log(error.message);
-      set({isLoading:false})
+      set({ isLoading: false });
+    }
+  },
+  addToFavorite: async (id) => {
+    set({ isLoading: true });
+    try {
+      const response = await fetch(`/api/user/addToFavorite/${id}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      if (data.status == true) {
+        set({ user: data.user, isLoading: false });
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+      set({ isLoading: false });
     }
   },
 }));

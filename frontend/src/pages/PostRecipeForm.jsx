@@ -2,6 +2,7 @@ import { Button, FormLabel, Input, NumberDecrementStepper, NumberIncrementSteppe
 import { Save } from "lucide-react"
 import { useState } from "react"
 import useRecipeStore from "../../store/useRecipeStore"
+import { Navigate } from "react-router-dom"
 
 
 const PostRecipeForm = () => {
@@ -68,8 +69,9 @@ const PostRecipeForm = () => {
       directions: [],
       visability: "public",
     })
+    Navigate("/");
   }
-console.log(recipeData)
+
 
   return (
     <div className="min-h-screen w-full flex justify-center ">

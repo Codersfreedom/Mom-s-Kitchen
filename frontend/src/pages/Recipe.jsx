@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@chakra-ui/react"
-import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, LogIn, Printer, Salad, Share, Smile, Star } from "lucide-react"
+import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, LogIn, Printer, Salad, Share, Star } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import useRecipeStore from "../../store/useRecipeStore"
@@ -12,7 +12,7 @@ const Recipe = () => {
     const [recipe, setRecipe] = useState({});
     const { getRecipeById } = useRecipeStore();
 
-    const { user, follow, isLoading } = useAuthStore();
+    const { user, follow, isLoading,addToFavorite } = useAuthStore();
     const { id } = useParams();
 
     useEffect(() => {
@@ -22,7 +22,8 @@ const Recipe = () => {
         getRecipe();
     }, [id])
 
-    const isFollowing = user?.following?.find((item) => item.id == recipe?.id)
+    const isFollowing = user?.following?.find((item) => item.id == recipe?.id);
+    const isFavorite = user?.favorites?.find((item)=>item.id ==recipe?.id)
 
     const handleReply = () => {
         if (!isClickedReply) {
@@ -45,7 +46,11 @@ const Recipe = () => {
                 <Avatar src="/Men jacket.avif" />
                 <h2 className="text-2xl">Submitted by <Link to={`/profile/${recipe?.user}`} className="text-blue-400">{recipe?.name || "No name"}</Link> </h2>
             </div>
-            <Button colorScheme="yellow" isLoading={isLoading} onClick={() => follow(recipe?.user)} >{isFollowing ? "Following" : "Follow"}</Button>
+            <div className="flex gap-4 items-center">
+            <Button colorScheme="yellow" isLoading={isLoading} onClick={() => follow(recipe?.user)} >{isFollowing ? "Unfollow" : "Follow"}</Button>
+            <Heart className="cursor-pointer"  fill={isFavorite? "red":"none"} onClick={()=>addToFavorite(recipe?._id)} />
+
+            </div>
             <p className="text-xl py-4">{recipe?.description}</p>
 
             <div className="flex gap-3 py-4">

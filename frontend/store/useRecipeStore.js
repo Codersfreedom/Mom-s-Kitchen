@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { create } from "zustand";
 
 const useRecipeStore = create((set) => ({
@@ -18,11 +19,12 @@ const useRecipeStore = create((set) => ({
       const data = await response.json();
       if (data.status == true) {
         set({ isLoading: false });
+        toast.success("Recipe posted")
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
-      Toast.error(error.message);
+      toast.error(error.message);
       set({ isLoading: false });
     }
   },

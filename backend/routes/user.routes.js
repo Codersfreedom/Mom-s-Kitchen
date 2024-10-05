@@ -4,7 +4,7 @@ import { protectRoute } from '../middleware/protectUser.js';
 
 const router = express.Router();
 
-router.post("/addToFavorite/:id",protectRoute,addToFavorite)
+router.get("/addToFavorite/:id",protectRoute,addToFavorite)
 router.get("/favorites",protectRoute,getFavorites);
 router.get("/follow/:id",protectRoute,handleFollow);
 router.get("/getPostedRecipes/:id",protectRoute,getPostedRecipes);

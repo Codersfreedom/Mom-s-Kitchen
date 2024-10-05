@@ -25,7 +25,7 @@ export const addToFavorite = async (req, res) => {
       user.favorites.push(id);
     }
     await user.save();
-    res.status(200).json({ status: true, favorites: user.favorites });
+    res.status(200).json({ status: true,  user });
   } catch (error) {
     console.log("Error in user controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });

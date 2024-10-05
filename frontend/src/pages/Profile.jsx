@@ -1,5 +1,5 @@
 import { Avatar, Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
-import { ChevronDownIcon, Clock, LogOut } from 'lucide-react';
+import { Bird, ChevronDownIcon, Clock, LogOut } from 'lucide-react';
 import RecipeCard from '../components/RecipeCard';
 import useAuthStore from '../../store/useAuthStore';
 import { formatDate } from '../lib/utils';
@@ -30,8 +30,8 @@ const Profile = () => {
                     </div>
 
                     <div className='flex flex-col gap-2 w-40'>
-                        <Button colorScheme='orange' >Followers: 1.4k </Button>
-                        <Button colorScheme='orange'>Following: 34 </Button>
+                        <Button colorScheme='orange' >Followers: {user?.followers.length} </Button>
+                        <Button colorScheme='orange'>Following: {user?.following.length} </Button>
                     </div>
 
 
@@ -39,37 +39,37 @@ const Profile = () => {
 
             </div>
 
-            <div className='w-full h-fit p-4 '>
+            <div className='w-full h-fit p-4 mx-auto'>
                 <Menu>
                     <MenuButton className='ml-2' as={Button} rightIcon={<ChevronDownIcon />}>
-                        Recipes
+                        Favorites
                     </MenuButton>
                     <MenuList>
                         <MenuItem>Saved</MenuItem>
-                        <MenuItem>Questions</MenuItem>
+                        <MenuItem>My Posts</MenuItem>
                         <MenuItem>Following</MenuItem>
                         <MenuItem>Followers</MenuItem>
                     </MenuList>
                 </Menu>
 
                 <div className='grid grid-cols-1 gap-2 lg:grid-cols-5  py-3 w-full' >
-                    {favorites.map((favorite)=>{
-                      return  <RecipeCard key={favorite._id} recipe={favorite} />
-                        
-                    })}
-                  
+                    {favorites.map((favorite) => {
+                        return <RecipeCard key={favorite._id} recipe={favorite} isLoading={isLoading} />
 
-                    {/* No content UI */}
-                    {/* <div className='flex gap-4 py-4 w-full '>
-                        <Bird size={'70px'} />
-                        <div className='flex flex-col gap-3 w-full '>
-                            <h1 className='text3xl font-bold'>UH OH!</h1>
-                            <p>Looks like rakesh762 has no recipes!</p>
-                        </div>
-                    </div> */}
+                    })}
+
+
+
                 </div>
 
-
+                {/* No content UI */}
+                {!isLoading && favorites && favorites?.length == 0 && <div className='flex gap-4 py-4 w-full  '>
+                    <Bird size={'70px'} />
+                    <div className='flex flex-col gap-3 w-full '>
+                        <h1 className='text-3xl font-bold'>UH OH!</h1>
+                        <p>Looks like rakesh762 has no recipes!</p>
+                    </div>
+                </div>}
 
 
             </div>

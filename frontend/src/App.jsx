@@ -8,8 +8,9 @@ import Recipe from './pages/Recipe'
 import Profile from './pages/Profile'
 import PostRecipeForm from './pages/PostRecipeForm'
 import useAuthStore from '../store/useAuthStore'
-import './App.css'
 import { Toaster } from 'react-hot-toast';
+import Loader from './components/Loader'
+import './App.css'
 
 function App() {
 
@@ -19,17 +20,17 @@ function App() {
     checkAuth()
   }, [checkAuth])
 
-  if(isCheckingAuth) return;
+  if (isCheckingAuth) return <Loader />;
 
   return (
     <div className='min-h-screen w-screen'>
-    
+
       <Header />
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/auth' element={!user ? <AuthPage /> : <Navigate to={'/'} />} />
         <Route path='/profile/:id' element={user ? <Profile /> : <Navigate to={'/auth'} />} />
-        <Route path='/post' element={user ? <PostRecipeForm /> : <Navigate  to={'/auth'}/>} />
+        <Route path='/post' element={user ? <PostRecipeForm /> : <Navigate to={'/auth'} />} />
         <Route path='/recipe/:id' element={<Recipe />} />
 
       </Routes>
