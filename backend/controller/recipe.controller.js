@@ -40,8 +40,8 @@ export const postRecipe = async (req, res) => {
     }
 
     const newRecipe = new Recipe({
-      user:user._id,
-      name:user.name,
+      user: user._id,
+      name: user.name,
       title,
       description,
       category,
@@ -65,7 +65,7 @@ export const postRecipe = async (req, res) => {
 
 export const fetchAllRecipes = async (req, res) => {
   try {
-    const recipes = await Recipe.find({visability:'public'});
+    const recipes = await Recipe.find({ visability: "public" });
     res.status(200).json({ status: true, recipes });
   } catch (error) {
     console.log("error in fetching recipe", error.message);
@@ -81,5 +81,26 @@ export const fetchRecipe = async (req, res) => {
   } catch (error) {
     console.log("Error in recipe controller", error.message);
     res.status(500).json({ status: false, message: "Internal server erorr" });
+  }
+};
+
+export const fetchSimilar = async (req, res) => {
+  try {
+    const similar = await Recipe.aggregate([
+      { $sample: { size: 5 } },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          title: 1,
+          description: 1,
+          image: 1,
+        },
+      },
+    ]);
+    res.status(200).json({ status: true, similar });
+  } catch (error) {
+    console.log("Error in similar controller", error.message);
+    res.status(500).json({ statu: false, message: "Internal server error" });
   }
 };
