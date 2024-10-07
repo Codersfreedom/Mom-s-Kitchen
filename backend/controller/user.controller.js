@@ -74,7 +74,7 @@ export const getPostedRecipes = async (req, res) => {
 export const askQuestions = async (req, res) => {
   try {
     const { recipeId, query } = req.body;
-console.log(recipeId,query)
+    console.log(recipeId, query);
     const recipe = await Recipe.findById(recipeId);
 
     if (!recipe) {
@@ -84,8 +84,8 @@ console.log(recipeId,query)
     }
     let newQuestion = null;
     const isExistingQuestions = await Question.find({ recipeId });
-   
-    if (isExistingQuestions.length>0) {
+
+    if (isExistingQuestions.length > 0) {
       newQuestion = await Question.findOneAndUpdate(
         { recipeId },
         {
@@ -99,10 +99,9 @@ console.log(recipeId,query)
             },
           },
         },
-        {new:true}
+        { new: true }
       );
     } else {
-      
       newQuestion = await Question.create({
         recipeId,
         questions: [
@@ -117,8 +116,7 @@ console.log(recipeId,query)
       });
     }
 
-    
-    res.status(200).json({ status: true, questions:newQuestion.questions });
+    res.status(200).json({ status: true, questions: newQuestion.questions });
   } catch (error) {
     console.log("Error in askQuestions controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
@@ -134,6 +132,33 @@ export const getAllQuestions = async (req, res) => {
     res.status(200).json({ status: true, questions });
   } catch (error) {
     console.log("Error in get all questions controller", error.message);
+    res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
+export const postReply = async (req, res) => {
+  try {
+    const { id, reply } = req.body;
+
+    const question = await Question.findOneAndUpdate(
+      { "questions._id": id },
+      {
+        $push: {
+          "questions.$.answers": {
+            answer: reply,
+
+            answeredBy: {
+              name: req.user.name,
+              userId: req.user._id,
+            },
+          },
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json({ status: true, question });
+  } catch (error) {
+    console.log("Error in post reply controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
   }
 };

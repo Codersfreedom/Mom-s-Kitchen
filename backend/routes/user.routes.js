@@ -6,7 +6,7 @@ import {
   getFavorites,
   getPostedRecipes,
   handleFollow,
-  
+  postReply,
 } from "../controller/user.controller.js";
 import { protectRoute } from "../middleware/protectUser.js";
 
@@ -17,5 +17,6 @@ router.get("/favorites", protectRoute, getFavorites);
 router.get("/follow/:id", protectRoute, handleFollow);
 router.get("/getPostedRecipes/:id", protectRoute, getPostedRecipes);
 router.post("/askQuestions", protectRoute, askQuestions);
-router.get("/questions/:id",getAllQuestions);
+router.get("/questions/:id", getAllQuestions);
+router.post("/postReply",protectRoute, postReply);
 export default router;

@@ -9,7 +9,7 @@ import {
 import { forwardRef } from 'react'
 import { Link } from 'react-router-dom'
 
-const Sheet = forwardRef(({ btnRef, isOpen, onClose }) => {
+const Sheet = ({ btnRef, isOpen, onClose }) => {
     return (
         <>
 
@@ -59,6 +59,6 @@ const Sheet = forwardRef(({ btnRef, isOpen, onClose }) => {
             </Drawer>
         </>
     )
-})
+}
 
 export default Sheet

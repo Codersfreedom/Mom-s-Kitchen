@@ -1,6 +1,6 @@
-import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@chakra-ui/react"
-import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, Lightbulb, LogIn, Printer, Salad, SendHorizontalIcon, Share, Star } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, IconButton, Input } from "@chakra-ui/react"
+import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, Lightbulb, LogIn, Printer, Salad, SendHorizontalIcon, Share, Star, Trash, Trash2 } from "lucide-react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import useRecipeStore from "../../store/useRecipeStore"
 import useAuthStore from "../../store/useAuthStore"
@@ -12,11 +12,12 @@ const Recipe = () => {
     const [showReplies, setShowReplies] = useState({});
     const [showReplyInput, setShowReplyInput] = useState({});
     const [questionData, setQuestionData] = useState('');
+    const [reply, setReply] = useState('');
     const [recipe, setRecipe] = useState({});
 
     const { getRecipeById } = useRecipeStore();
     const { user, follow, isLoading, addToFavorite } = useAuthStore();
-    const { questions, fetchQuestions, askQuestions, isLoading: isAsking } = useUserStore();
+    const { questions, fetchQuestions, askQuestions, postReply, isLoading: isPosting } = useUserStore();
 
     const { id } = useParams();
     const navigate = useNavigate();
@@ -45,7 +46,12 @@ const Recipe = () => {
         }))
     }
 
-
+    const handleShowReplyInput = (inputId) => {
+        setShowReplyInput((prev) => ({
+            ...prev,
+            [inputId]: !prev[inputId]
+        }))
+    }
 
     const handleAskQuestion = () => {
         if (!questionData) {
@@ -54,14 +60,17 @@ const Recipe = () => {
         askQuestions(id, questionData)
     }
 
-    const handleShowReplyInput = (inputId) => {
-        setShowReplyInput((prev) => ({
-            ...prev,
-            [inputId]: !prev[inputId]
-        }))
+    const handleSendReply = (questionId) => {
+        if (!reply) {
+            return toast.error("Please enter something to reply")
+        }
+        postReply(questionId, reply)
     }
 
-    
+
+    const handleQuestionDelete = () => {
+
+    }
 
     return (
         <div className="min-h-screen w-full p-5 ">
@@ -135,6 +144,7 @@ const Recipe = () => {
                     width={'100%'}
                     variant={'solid'}
                     colorScheme="yellow"
+                    onClick={() => { navigate("/post") }}
                 >I Made This</Button>
             </div>
 
@@ -185,18 +195,26 @@ const Recipe = () => {
                 <div className="w-full lg:w-1/2 py-2 flex flex-col gap-3">
                     <Input placeholder="ask a question" rounded={'15px'} onChange={(e) => setQuestionData(e.target.value)} />
                     {!user ? <Button colorScheme="yellow" leftIcon={<LogIn />} onClick={() => { navigate("/auth") }} > Sign in to ask a question</Button> :
-                        <Button colorScheme="yellow" isLoading={isAsking} leftIcon={<Lightbulb />}
+                        <Button colorScheme="yellow" isLoading={isPosting} leftIcon={<Lightbulb />}
                             onClick={handleAskQuestion}
                         >Ask a question</Button>
                     }
                 </div>
 
 
-                {!isAsking && questions && questions.map((question) => (
+                {!isPosting && questions && questions.map((question) => (
                     <Card key={question._id}>
-                        <CardHeader className="flex gap-4 items-center">
-                            <Avatar src="/Men jacket.avif" />
-                            <Link to={'profile/34234'}>{question?.askedBy?.name}</Link>
+                        <CardHeader className="flex  items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <Avatar src="/Men jacket.avif" />
+                                <Link to={`/profile/${question?.askedBy.userId}`}>{question?.askedBy?.name}</Link>
+                            </div>
+                            {question?.askedBy.userId === user._id && <IconButton
+                                icon={<Trash />}
+                                onClick={handleQuestionDelete}
+                            >
+
+                            </IconButton>}
                         </CardHeader>
 
                         <CardBody>
@@ -208,38 +226,60 @@ const Recipe = () => {
                                 {!showReplyInput[question?._id] && <Button onClick={(e) => { handleToggleReplies(question?._id) }}>
                                     {showReplies[question?._id] ? "Hide Replies" : "Show Replies"}
                                 </Button>}
-                                {showReplyInput[question._id] && <Input placeholder="Type reply.." />}
-                                <div className="flex gap-4 items-center">
-                                    <Button onClick={(e) =>handleShowReplyInput(question?._id)}>{showReplyInput[question._id] ? "Cancel":"Reply"}</Button>
-                                   {showReplyInput[question?._id] && <div className="flex gap-1 items-center">
-                                       <Button
-                                       leftIcon={<SendHorizontalIcon/>}
-                                       >Send</Button>
-                                        
+                                {showReplyInput[question._id] &&
+
+
+                                    <Input placeholder="Type reply.."
+                                        onChange={(e) => setReply(e.target.value)}
+                                    />
+
+
+                                }
+                                <div className="flex gap-2 items-center w-32">
+                                    <Button onClick={(e) => handleShowReplyInput(question?._id)}>{showReplyInput[question._id] ? "Cancel" : "Reply"}</Button>
+                                    {showReplyInput[question?._id] && <div className="flex gap-1 items-center">
+                                        <IconButton
+                                            isLoading={isPosting}
+                                            icon={<SendHorizontalIcon />}
+                                            onClick={(e) => { handleSendReply(question?._id) }}
+                                        >
+                                        </IconButton>
+
+
                                     </div>}
 
                                 </div>
                             </div>
 
                             {showReplies[question._id] &&
-                                <div className='w-full  border-t-2 py-3'  >
-                                    <div className="w-full">
-                                        <div className="flex justify-between items-center">
-                                            <div className="flex gap-4 items-center pb-2">
-                                                <Avatar />
-                                                <Link to={`/profile/34534`}>john</Link>
+
+                                <div className='w-full   py-3 flex flex-col gap-4'  >
+                                    {question?.answers?.map((answer) => (
+                                        <div className="w-full border-t-2 py-2 " key={answer?.answer}>
+                                            <div className="flex justify-between items-center">
+                                                <div className="flex gap-4 items-center pb-2">
+                                                    <Avatar />
+                                                    <Link to={`/profile/${answer?.answeredBy.userId}`}>{answer?.answeredBy.name}</Link>
+                                                </div>
+                                                <div className="flex gap-2 items-center justify-center">
+                                                    <p>2 march 2024</p>
+                                                    {answer?.answeredBy.userId === user?._id && <IconButton
+                                                        icon={<Trash2 color="red" />}
+                                                    >
+
+                                                    </IconButton>}
+                                                </div>
                                             </div>
-                                            <div>
-                                                2 march 2024
-                                            </div>
+
+                                            <p>{answer?.answer}</p>
                                         </div>
+                                    ))
 
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, accusamus?</p>
-                                    </div>
+                                    }
+
+
+
                                 </div>
-
-
-
 
                             }
 
