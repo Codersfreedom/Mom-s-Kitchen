@@ -4,22 +4,36 @@ import RecipeCard from '../components/RecipeCard';
 import useAuthStore from '../../store/useAuthStore';
 import { formatDate } from '../lib/utils';
 import useUserStore from '../../store/useUserStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const Profile = () => {
-    const { user, logout } = useAuthStore();
+    const { id } = useParams();
 
-    const { isLoading, favorites, fetchFavorites } = useUserStore();
+    const { logout } = useAuthStore();
+    const { isLoading, favorites, fetchFavorites, getProfile } = useUserStore();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            setUser(await getProfile(id));
+        }
+        fetchProfile()
+    }, [id])
 
     useEffect(() => {
         fetchFavorites();
     }, [fetchFavorites])
 
+
+    if (isLoading) return <Loader />
+
     return (
         <div className='min-h-screen w-full'>
             <div className='w-full h-48 bg-gradient-to-t from-teal-400 to-yellow-200  ' >
                 <div className='float-end lg:pr-10 pr-5 pt-2 flex items-center gap-2 justify-center '>
-                    <Clock size={'20px'} /><p>{formatDate(user.createdAt)}</p>
+                    <Clock size={'20px'} /><p>{formatDate(user?.createdAt)}</p>
                     <LogOut size={'20px'} className='cursor-pointer' onClick={logout} />
                 </div>
                 <div className='  flex gap-5 items-center  p-10  '>
@@ -42,7 +56,7 @@ const Profile = () => {
             <div className='w-full h-fit p-4 mx-auto'>
                 <Menu>
                     <MenuButton className='ml-2' as={Button} rightIcon={<ChevronDownIcon />}>
-                        Favorites
+                        Saved
                     </MenuButton>
                     <MenuList>
                         <MenuItem>Saved</MenuItem>

@@ -24,9 +24,9 @@ const RecipeCard = ({recipe,isLoading}) => {
     isLoaded={!isLoading}
     
     >
-        <div className=' max-h-full flex flex-col  '>
-            <div className='text-xl text-start  font-bold h-fit  w-full'>{recipe?.title}</div>
-            <div className='w-full text-start text-wrap '>{recipe?.description.substring(0,250)+"..."}</div>
+        <div className=' max-h-44 lg:h-56 flex flex-col flex-1  '>
+            <div className='lg:text-xl text-start  font-bold h-fit  w-full text-base'>{recipe?.title}</div>
+            <div className='w-full text-start max-h-[95px] py-4 lg:py-1  text-wrap overflow-hidden '>{recipe?.description.substring(0,130)+"..."}</div>
         </div>
     </SkeletonText>
     </Link>

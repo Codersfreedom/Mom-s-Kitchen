@@ -18,7 +18,7 @@ const Recipe = () => {
 
     const { getRecipeById } = useRecipeStore();
     const { user, follow, isLoading, addToFavorite } = useAuthStore();
-    const { questions, fetchQuestions, askQuestions, postReply, isLoading: isPosting } = useUserStore();
+    const { questions, fetchQuestions, askQuestions, deleteQuestion, postReply, deleteReply, isLoading: isPosting } = useUserStore();
 
     const { id } = useParams();
     const navigate = useNavigate();
@@ -59,6 +59,7 @@ const Recipe = () => {
             return toast.error("Please enter question to ask!")
         }
         askQuestions(id, questionData)
+        setQuestionData(" ");
     }
 
     const handleSendReply = (questionId) => {
@@ -76,8 +77,16 @@ const Recipe = () => {
     }
 
 
-    const handleDeleteQuestion = () => {
+    const handleDeleteQuestion = (questionId) => {
+        if (!user) {
 
+            return toast.error("Please login to delete the question");
+        }
+        deleteQuestion(questionId)
+    }
+
+    const handleDeleteReply = (questionId, answerId) => {
+        deleteReply(questionId, answerId);
     }
 
     return (
@@ -201,7 +210,7 @@ const Recipe = () => {
                 <h1 className="text-xl font-semibold">Questions & Replies</h1>
 
                 <div className="w-full lg:w-1/2 py-2 flex flex-col gap-3">
-                    <Input placeholder="ask a question" rounded={'15px'} onChange={(e) => setQuestionData(e.target.value)} />
+                    <Input placeholder="ask a question" rounded={'15px'} value={questionData} onChange={(e) => setQuestionData(e.target.value)} />
                     {!user ? <Button colorScheme="yellow" leftIcon={<LogIn />} onClick={() => { navigate("/auth") }} > Sign in to ask a question</Button> :
                         <Button colorScheme="yellow" isLoading={isPosting} leftIcon={<Lightbulb />}
                             onClick={handleAskQuestion}
@@ -210,19 +219,27 @@ const Recipe = () => {
                 </div>
 
 
-                {!isPosting && questions && questions.map((question) => (
+                {!isPosting && questions.length > 0 && questions.map((question) => (
                     <Card key={question._id}>
                         <CardHeader className="flex  items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <Avatar src="/Men jacket.avif" />
-                                <Link to={`/profile/${question?.askedBy.userId}`}>{question?.askedBy?.name}</Link>
+                                <div className="flex flex-col justify-center ">
+                                    <Link to={`/profile/${question?.askedBy.userId}`}>{question?.askedBy?.name}</Link>
+                                    <p className="text-sm font-light">{formatDate(question?.date)}</p>
+
+                                </div>
                             </div>
+
                             {user && question?.askedBy.userId === user._id && <IconButton
                                 icon={<Trash />}
-                                onClick={handleDeleteQuestion}
+                                onClick={() => handleDeleteQuestion(question?._id)}
                             >
 
                             </IconButton>}
+
+
+
                         </CardHeader>
 
                         <CardBody>
@@ -232,7 +249,7 @@ const Recipe = () => {
                         <CardFooter className="flex flex-col gap-3">
                             <div className="w-full flex justify-between gap-2">
                                 {!showReplyInput[question?._id] && <Button onClick={(e) => { handleToggleReplies(question?._id) }}>
-                                    {showReplies[question?._id] ? `Hide ${question?.answers.length} Replies` : `${question?.answers.length>0 ? `Show ${question?.answers.length} Replies`: 'No Replies' } `}
+                                    {showReplies[question?._id] ? `Hide ${question?.answers.length} Replies` : `${question?.answers.length > 0 ? `Show ${question?.answers.length} Replies` : 'No Replies'} `}
                                 </Button>}
                                 {showReplyInput[question._id] &&
 
@@ -267,12 +284,16 @@ const Recipe = () => {
                                             <div className="flex justify-between items-center">
                                                 <div className="flex gap-4 items-center pb-2">
                                                     <Avatar />
-                                                    <Link to={`/profile/${answer?.answeredBy.userId}`}>{answer?.answeredBy.name}</Link>
+                                                    <div className="flex flex-col justify-center">
+
+                                                        <Link to={`/profile/${answer?.answeredBy.userId}`}>{answer?.answeredBy.name}</Link>
+                                                        <p className="text-sm font-light">{formatDate(answer?.date)}</p>
+                                                    </div>
                                                 </div>
                                                 <div className="flex gap-2 items-center justify-center">
-                                                    <p>{formatDate(answer?.date)}</p>
                                                     {user && answer?.answeredBy.userId === user._id && <IconButton
                                                         icon={<Trash2 color="red" />}
+                                                        onClick={() => handleDeleteReply(question?._id, answer?._id)}
                                                     >
 
                                                     </IconButton>}

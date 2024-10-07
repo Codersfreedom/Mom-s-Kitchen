@@ -2,6 +2,20 @@ import Question from "../model/question.model.js";
 import Recipe from "../model/recipe.model.js";
 import { User } from "../model/user.model.js";
 
+export const getProfile = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ status: false, message: "User not found" });
+    }
+    res.status(200).json({ status: true, user });
+  } catch (error) {
+    console.log("Error in getting profile controller", error.message);
+    res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
 export const getFavorites = async (req, res) => {
   try {
     const recipes = await Recipe.find({ _id: { $in: req.user.favorites } });
@@ -164,6 +178,49 @@ export const postReply = async (req, res) => {
     res.status(200).json({ status: true, question });
   } catch (error) {
     console.log("Error in post reply controller", error.message);
+    res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
+export const deleteQuestion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const questions = await Question.findOneAndUpdate(
+      {
+        "questions._id": id,
+      },
+      {
+        $pull: {
+          questions: { _id: id },
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json({ status: true, questions });
+  } catch (error) {
+    console.log("Error in deleteQuesion controller", error.message);
+    res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
+export const deleteReply = async (req, res) => {
+  try {
+    const { questionId,answerId } = req.params;
+    
+   const updatedAnswers = await Question.findOneAndUpdate(
+      { "questions._id": questionId },
+      {
+        $pull: {
+          "questions.$.answers": { _id: answerId },
+        },
+      }
+    );
+    if(updatedAnswers){
+
+      res.status(200).json({ status: true, message: "Reply deleted" });
+    }
+  } catch (error) {
+    console.log("Error in delete reply controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
   }
 };

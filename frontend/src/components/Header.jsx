@@ -51,7 +51,7 @@ const Header = () => {
                     onClick={handleSearch}
                 />
                 <Bookmark className='cursor-pointer hover:scale-110 duration-300 ease-in-out ' />
-                {user && <Link to={`/profile/${user?.name}`}> <User className='cursor-pointer hover:scale-110 duration-300 ease-in-out ' /></Link>}
+                {user && <Link to={`/profile/${user?._id}`}> <User className='cursor-pointer hover:scale-110 duration-300 ease-in-out ' /></Link>}
                 {!user && <Link className='cursor-pointer hover:scale-110 duration-300 ease-in-out ' to={'/auth'}><LogIn /></Link>}
             </div>
 
