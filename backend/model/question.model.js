@@ -12,24 +12,40 @@ const questionSchema = mongoose.Schema(
           type: String,
           required: true,
         },
-          askedBy: {
-            userId: {
+        askedBy: {
+          userId: {
+            type: String,
+            required: true,
+          },
+          name: {
+            type: String,
+            required: true,
+          },
+          image: {
+            type: String,
+          },
+        },
+        answers: [
+          {
+            answer: {
               type: String,
               required: true,
             },
-            name: {
-              type: String,
-              required: true,
+            answeredBy: {
+              userId: {
+                type: String,
+                required: true,
+              },
+              name: {
+                type: String,
+              },
             },
-            image: {
-              type: String,
+            date: {
+              type:Date,
+              default:Date.now()
             },
           },
-          answers: {
-            type: Array,
-            default: [],
-          },
-        
+        ],
       },
     ],
   },

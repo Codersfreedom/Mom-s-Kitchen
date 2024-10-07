@@ -139,7 +139,12 @@ export const getAllQuestions = async (req, res) => {
 export const postReply = async (req, res) => {
   try {
     const { id, reply } = req.body;
-
+    if (!reply) {
+      return res.status(400).json({
+        status: false,
+        message: "Reply field can't be empty",
+      });
+    }
     const question = await Question.findOneAndUpdate(
       { "questions._id": id },
       {

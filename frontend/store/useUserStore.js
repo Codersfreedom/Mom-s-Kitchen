@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { create } from "zustand";
 
 const useUserStore = create((set, get) => ({
@@ -46,19 +47,20 @@ const useUserStore = create((set, get) => ({
         body: JSON.stringify({ recipeId, query }),
       });
       const data = await response.json();
-
+      console.log(data);
       if (data.status == true) {
         set((prev) => ({
           ...prev,
           questions: data.questions, // Set the questions directly from response
         }));
-        console.log(get().questions);
+
         set({ isLoading: false });
+        toast.success("Questions posted!");
       } else {
-        throw Error;
+        throw new Error(data);
       }
     } catch (error) {
-      console.log(error.message);
+      toast.error(error.message);
       set({ isLoading: false });
     }
   },
@@ -74,7 +76,7 @@ const useUserStore = create((set, get) => ({
         body: JSON.stringify({ id, reply }),
       });
       const data = await response.json();
-      
+
       if (data.status == true) {
         set((prev) => ({
           questions: prev.questions.map((question) =>
@@ -84,11 +86,12 @@ const useUserStore = create((set, get) => ({
           ),
           isLoading: false,
         }));
+        toast.success("Reply posted!");
       } else {
-        throw Error;
+        throw new Error(data);
       }
     } catch (error) {
-      console.log(error.message);
+      toast.error(error.message);
       set({ isLoading: false });
     }
   },

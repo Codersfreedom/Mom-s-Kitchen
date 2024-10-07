@@ -74,15 +74,21 @@ const useAuthStore = create((set, get) => ({
 
   follow: async (id) => {
     set({ isLoading: true });
+    if (!get().user) {
+      set({ isLoading: false });
+      return toast.error("Please login to follow");
+    }
     try {
+     
       const response = await fetch(`/api/user/follow/${id}`, {
         method: "GET",
       });
       const data = await response.json();
       if (data.status == true) {
         set({ isLoading: false, user: data.user });
+        toast.success("User followed!");
       } else {
-        throw new Error(data.message);
+        throw new Error(data);
       }
     } catch (error) {
       console.log(error.message);
@@ -91,6 +97,10 @@ const useAuthStore = create((set, get) => ({
   },
   addToFavorite: async (id) => {
     set({ isLoading: true });
+    if (!get().user) {
+      set({ isLoading: false });
+      return toast.error("Please login to add favorite");
+    }
     try {
       const response = await fetch(`/api/user/addToFavorite/${id}`, {
         method: "GET",
@@ -98,8 +108,9 @@ const useAuthStore = create((set, get) => ({
       const data = await response.json();
       if (data.status == true) {
         set({ user: data.user, isLoading: false });
+        toast.success("Added to favorites");
       } else {
-        throw new Error(data.message);
+        throw new Error(data);
       }
     } catch (error) {
       console.log(error.message);

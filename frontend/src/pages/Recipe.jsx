@@ -6,6 +6,7 @@ import useRecipeStore from "../../store/useRecipeStore"
 import useAuthStore from "../../store/useAuthStore"
 import useUserStore from "../../store/useUserStore"
 import toast from "react-hot-toast"
+import { formatDate } from "../lib/utils"
 
 
 const Recipe = () => {
@@ -64,11 +65,18 @@ const Recipe = () => {
         if (!reply) {
             return toast.error("Please enter something to reply")
         }
+        if (!user) {
+            return toast.error("Please login to post a reply")
+        }
         postReply(questionId, reply)
+        setShowReplyInput((prev) => ({
+            ...prev,
+            [questionId]: !prev[questionId]
+        }))
     }
 
 
-    const handleQuestionDelete = () => {
+    const handleDeleteQuestion = () => {
 
     }
 
@@ -209,9 +217,9 @@ const Recipe = () => {
                                 <Avatar src="/Men jacket.avif" />
                                 <Link to={`/profile/${question?.askedBy.userId}`}>{question?.askedBy?.name}</Link>
                             </div>
-                            {question?.askedBy.userId === user._id && <IconButton
+                            {user && question?.askedBy.userId === user._id && <IconButton
                                 icon={<Trash />}
-                                onClick={handleQuestionDelete}
+                                onClick={handleDeleteQuestion}
                             >
 
                             </IconButton>}
@@ -224,7 +232,7 @@ const Recipe = () => {
                         <CardFooter className="flex flex-col gap-3">
                             <div className="w-full flex justify-between gap-2">
                                 {!showReplyInput[question?._id] && <Button onClick={(e) => { handleToggleReplies(question?._id) }}>
-                                    {showReplies[question?._id] ? "Hide Replies" : "Show Replies"}
+                                    {showReplies[question?._id] ? `Hide ${question?.answers.length} Replies` : `${question?.answers.length>0 ? `Show ${question?.answers.length} Replies`: 'No Replies' } `}
                                 </Button>}
                                 {showReplyInput[question._id] &&
 
@@ -235,7 +243,7 @@ const Recipe = () => {
 
 
                                 }
-                                <div className="flex gap-2 items-center w-32">
+                                <div className="flex gap-2 items-center ">
                                     <Button onClick={(e) => handleShowReplyInput(question?._id)}>{showReplyInput[question._id] ? "Cancel" : "Reply"}</Button>
                                     {showReplyInput[question?._id] && <div className="flex gap-1 items-center">
                                         <IconButton
@@ -254,16 +262,16 @@ const Recipe = () => {
                             {showReplies[question._id] &&
 
                                 <div className='w-full   py-3 flex flex-col gap-4'  >
-                                    {question?.answers?.map((answer) => (
-                                        <div className="w-full border-t-2 py-2 " key={answer?.answer}>
+                                    {question?.answers.length > 0 && question?.answers?.map((answer) => (
+                                        <div className="w-full border-t-2 py-2 " key={answer?._id}>
                                             <div className="flex justify-between items-center">
                                                 <div className="flex gap-4 items-center pb-2">
                                                     <Avatar />
                                                     <Link to={`/profile/${answer?.answeredBy.userId}`}>{answer?.answeredBy.name}</Link>
                                                 </div>
                                                 <div className="flex gap-2 items-center justify-center">
-                                                    <p>2 march 2024</p>
-                                                    {answer?.answeredBy.userId === user?._id && <IconButton
+                                                    <p>{formatDate(answer?.date)}</p>
+                                                    {user && answer?.answeredBy.userId === user._id && <IconButton
                                                         icon={<Trash2 color="red" />}
                                                     >
 
@@ -273,9 +281,14 @@ const Recipe = () => {
 
                                             <p>{answer?.answer}</p>
                                         </div>
-                                    ))
+                                    ))}
 
-                                    }
+                                    {question?.answers.length === 0 && (
+                                        <div className="w-full border-t-2 py-2 ">
+                                            No replies till now!
+                                        </div>
+                                    )}
+
 
 
 
