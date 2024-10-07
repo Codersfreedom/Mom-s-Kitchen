@@ -33,7 +33,7 @@ const Header = () => {
             </div>}
 
             <div className='w-3/4 h-full hidden lg:block px-4'>
-                <ul className=' w-full h-full list-none flex justify-center items-center gap-10 text-xl font-semibold    '>
+                <ul className=' w-full h-full list-none flex justify-center items-center gap-10 text-base font-semibold    '>
                     <li className='cursor-pointer hover:scale-110 duration-300 ease-in-out '>Recipes</li>
                     <li className='cursor-pointer hover:scale-110 duration-300 ease-in-out '>Popular</li>
                     <li className='cursor-pointer hover:scale-110 duration-300 ease-in-out ' >Healthy</li>

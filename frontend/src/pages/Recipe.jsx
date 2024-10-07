@@ -1,19 +1,27 @@
 import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@chakra-ui/react"
-import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, LogIn, Printer, Salad, Share, Star } from "lucide-react"
-import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, Lightbulb, LogIn, Printer, Salad, SendHorizontalIcon, Share, Star } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import useRecipeStore from "../../store/useRecipeStore"
 import useAuthStore from "../../store/useAuthStore"
+import useUserStore from "../../store/useUserStore"
+import toast from "react-hot-toast"
 
 
 const Recipe = () => {
-    const [isShowingReplies, setIsShowingReplies] = useState(false);
-    const [isClickedReply, setIsClickedReply] = useState(false);
+    const [showReplies, setShowReplies] = useState({});
+    const [showReplyInput, setShowReplyInput] = useState({});
+    const [questionData, setQuestionData] = useState('');
     const [recipe, setRecipe] = useState({});
-    const { getRecipeById } = useRecipeStore();
 
-    const { user, follow, isLoading,addToFavorite } = useAuthStore();
+    const { getRecipeById } = useRecipeStore();
+    const { user, follow, isLoading, addToFavorite } = useAuthStore();
+    const { questions, fetchQuestions, askQuestions, isLoading: isAsking } = useUserStore();
+
     const { id } = useParams();
+    const navigate = useNavigate();
+
+
 
     useEffect(() => {
         const getRecipe = async () => {
@@ -22,15 +30,39 @@ const Recipe = () => {
         getRecipe();
     }, [id])
 
-    const isFollowing = user?.following?.find((item) => item.id == recipe?.id);
-    const isFavorite = user?.favorites?.find((item)=>item.id ==recipe?.id)
+    useEffect(() => {
+        fetchQuestions(id);
+    }, [id])
 
-    const handleReply = () => {
-        if (!isClickedReply) {
-            setIsClickedReply(true);
-        }
-        //TODO:Set isClickedReply false after successfull reply
+    const isFollowing = user?.following?.find((item) => item.id == recipe?.id);
+    const isFavorite = user?.favorites?.find((item) => item.id == recipe?.id)
+
+    const handleToggleReplies = (question_id) => {
+
+        setShowReplies((prev) => ({
+            ...prev,
+            [question_id]: !prev[question_id],
+        }))
     }
+
+
+
+    const handleAskQuestion = () => {
+        if (!questionData) {
+            return toast.error("Please enter question to ask!")
+        }
+        askQuestions(id, questionData)
+    }
+
+    const handleShowReplyInput = (inputId) => {
+        setShowReplyInput((prev) => ({
+            ...prev,
+            [inputId]: !prev[inputId]
+        }))
+    }
+
+    
+
     return (
         <div className="min-h-screen w-full p-5 ">
 
@@ -47,8 +79,8 @@ const Recipe = () => {
                 <h2 className="text-2xl">Submitted by <Link to={`/profile/${recipe?.user}`} className="text-blue-400">{recipe?.name || "No name"}</Link> </h2>
             </div>
             <div className="flex gap-4 items-center">
-            <Button colorScheme="yellow" isLoading={isLoading} onClick={() => follow(recipe?.user)} >{isFollowing ? "Unfollow" : "Follow"}</Button>
-            <Heart className="cursor-pointer"  fill={isFavorite? "red":"none"} onClick={()=>addToFavorite(recipe?._id)} />
+                <Button colorScheme="yellow" isLoading={isLoading} onClick={() => follow(recipe?.user)} >{isFollowing ? "Unfollow" : "Follow"}</Button>
+                <Heart className="cursor-pointer" fill={isFavorite ? "red" : "none"} onClick={() => addToFavorite(recipe?._id)} />
 
             </div>
             <p className="text-xl py-4">{recipe?.description}</p>
@@ -151,54 +183,74 @@ const Recipe = () => {
                 <h1 className="text-xl font-semibold">Questions & Replies</h1>
 
                 <div className="w-full lg:w-1/2 py-2 flex flex-col gap-3">
-                    <Input placeholder="ask a question" rounded={'15px'} />
-                    <Button colorScheme="yellow" leftIcon={<LogIn />}> Sign in to ask a question</Button>
+                    <Input placeholder="ask a question" rounded={'15px'} onChange={(e) => setQuestionData(e.target.value)} />
+                    {!user ? <Button colorScheme="yellow" leftIcon={<LogIn />} onClick={() => { navigate("/auth") }} > Sign in to ask a question</Button> :
+                        <Button colorScheme="yellow" isLoading={isAsking} leftIcon={<Lightbulb />}
+                            onClick={handleAskQuestion}
+                        >Ask a question</Button>
+                    }
                 </div>
 
 
-                <Card>
-                    <CardHeader className="flex gap-4 items-center">
-                        <Avatar src="/Men jacket.avif" />
-                        <Link to={'profile/34234'}>John doe</Link>
-                    </CardHeader>
+                {!isAsking && questions && questions.map((question) => (
+                    <Card key={question._id}>
+                        <CardHeader className="flex gap-4 items-center">
+                            <Avatar src="/Men jacket.avif" />
+                            <Link to={'profile/34234'}>{question?.askedBy?.name}</Link>
+                        </CardHeader>
 
-                    <CardBody>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis porro, hic modi atque reiciendis dolores magnam distinctio ducimus obcaecati officiis!</p>
-                    </CardBody>
-                    <CardFooter className="flex flex-col gap-3">
-                        <div className="w-full flex justify-between gap-2">
-                            {!isClickedReply && <Button onClick={(e) => setIsShowingReplies(!isShowingReplies)}>
-                                {isShowingReplies ? 'Hide 3 Replies' : 'Show 3 Replies'}
-                            </Button>}
-                            {isClickedReply && <Input placeholder="Type reply.." />}
-                            <div className="flex gap-4 items-center">
-                                <Button onClick={handleReply}>Reply</Button>
-                                <div className="flex gap-1 items-center">
-                                    <Heart className="cursor-pointer" color="red" />
-                                    <p>4 </p>
+                        <CardBody>
+                            <p>{question?.query}</p>
+                        </CardBody>
+
+                        <CardFooter className="flex flex-col gap-3">
+                            <div className="w-full flex justify-between gap-2">
+                                {!showReplyInput[question?._id] && <Button onClick={(e) => { handleToggleReplies(question?._id) }}>
+                                    {showReplies[question?._id] ? "Hide Replies" : "Show Replies"}
+                                </Button>}
+                                {showReplyInput[question._id] && <Input placeholder="Type reply.." />}
+                                <div className="flex gap-4 items-center">
+                                    <Button onClick={(e) =>handleShowReplyInput(question?._id)}>{showReplyInput[question._id] ? "Cancel":"Reply"}</Button>
+                                   {showReplyInput[question?._id] && <div className="flex gap-1 items-center">
+                                       <Button
+                                       leftIcon={<SendHorizontalIcon/>}
+                                       >Send</Button>
+                                        
+                                    </div>}
+
+                                </div>
+                            </div>
+
+                            {showReplies[question._id] &&
+                                <div className='w-full  border-t-2 py-3'  >
+                                    <div className="w-full">
+                                        <div className="flex justify-between items-center">
+                                            <div className="flex gap-4 items-center pb-2">
+                                                <Avatar />
+                                                <Link to={`/profile/34534`}>john</Link>
+                                            </div>
+                                            <div>
+                                                2 march 2024
+                                            </div>
+                                        </div>
+
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, accusamus?</p>
+                                    </div>
                                 </div>
 
-                            </div>
-                        </div>
 
-                        {isShowingReplies && <div className="w-full flex border-t-2 py-3">
-                            <div className="w-full">
-                                <div className="flex justify-between items-center">
-                                    <div className="flex gap-4 items-center pb-2">
-                                        <Avatar />
-                                        <Link to={'/profile/45345'}>John doe</Link>
-                                    </div>
-                                    <div>
-                                        2 march 2024
-                                    </div>
-                                </div>
 
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, accusamus?</p>
-                            </div>
-                        </div>}
-                    </CardFooter>
 
-                </Card>
+                            }
+
+
+
+
+                        </CardFooter>
+
+                    </Card>
+                ))}
+
             </div>
 
             <h1 className="text-2xl font-semibold">You'll also love</h1>
