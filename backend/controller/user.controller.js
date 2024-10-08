@@ -36,11 +36,21 @@ export const addToFavorite = async (req, res) => {
 
     if (existingRecipe) {
       user.favorites.pull(id);
+      await user.save();
+      return res.status(200).json({
+        status: true,
+        message: "Removed from favorites",
+        favorites: user.favorites,
+      });
     } else {
       user.favorites.push(id);
+      await user.save();
+      return res.status(200).json({
+        status: true,
+        message: "Added to favorites",
+        favorites: user.favorites,
+      });
     }
-    await user.save();
-    res.status(200).json({ status: true, user });
   } catch (error) {
     console.log("Error in user controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
@@ -50,23 +60,37 @@ export const addToFavorite = async (req, res) => {
 export const handleFollow = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const user = req.user;
 
-    const isFollowing = await user.following.find((item) => item.id == id);
-    console.log(isFollowing);
+    const isFollowing = await user.following.find((item) => item.id === id);
+
     const otherUser = await User.findById(id);
 
     if (isFollowing) {
       user.following.pull(id);
       otherUser.followers.pull(user._id);
+      await user.save();
+      await otherUser.save();
+      return res
+        .status(200)
+        .json({
+          status: true,
+          following: user.following,
+          message: "User unfollowed!",
+        });
     } else {
       user.following.push(id);
       otherUser.followers.push(user._id);
+      await user.save();
+      await otherUser.save();
+      return res
+        .status(200)
+        .json({
+          status: true,
+          following: user.following,
+          message: "User followed!",
+        });
     }
-    await user.save();
-    await otherUser.save();
-    res.status(200).json({ status: true, user });
   } catch (error) {
     console.log("Error in user controller", error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
@@ -205,9 +229,9 @@ export const deleteQuestion = async (req, res) => {
 
 export const deleteReply = async (req, res) => {
   try {
-    const { questionId,answerId } = req.params;
-    
-   const updatedAnswers = await Question.findOneAndUpdate(
+    const { questionId, answerId } = req.params;
+
+    const updatedAnswers = await Question.findOneAndUpdate(
       { "questions._id": questionId },
       {
         $pull: {
@@ -215,8 +239,7 @@ export const deleteReply = async (req, res) => {
         },
       }
     );
-    if(updatedAnswers){
-
+    if (updatedAnswers) {
       res.status(200).json({ status: true, message: "Reply deleted" });
     }
   } catch (error) {

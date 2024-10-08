@@ -15,8 +15,9 @@ const Recipe = () => {
     const [questionData, setQuestionData] = useState('');
     const [reply, setReply] = useState('');
     const [recipe, setRecipe] = useState({});
+    const [similar, setSimilar] = useState(null);
 
-    const { getRecipeById } = useRecipeStore();
+    const { getRecipeById, getSimilar, isLoading: isFetching } = useRecipeStore();
     const { user, follow, isLoading, addToFavorite } = useAuthStore();
     const { questions, fetchQuestions, askQuestions, deleteQuestion, postReply, deleteReply, isLoading: isPosting } = useUserStore();
 
@@ -33,12 +34,21 @@ const Recipe = () => {
     }, [id])
 
     useEffect(() => {
+        const fetchSimilar = async () => {
+            setSimilar(await getSimilar());
+        }
+        fetchSimilar()
+    }, [getSimilar])
+
+
+    useEffect(() => {
         fetchQuestions(id);
     }, [id])
 
-    const isFollowing = user?.following?.find((item) => item.id == recipe?.id);
-    const isFavorite = user?.favorites?.find((item) => item.id == recipe?.id)
-
+    console.log(user)
+    const isFollowing = user?.following.some((follow) => follow._id === recipe.user)
+    const isFavorite = user?.favorites.some((favorite) => favorite._id === recipe?._id)
+    console.log(isFavorite)
     const handleToggleReplies = (question_id) => {
 
         setShowReplies((prev) => ({
@@ -326,34 +336,23 @@ const Recipe = () => {
                 ))}
 
             </div>
-
+            {/* similar section */}
             <h1 className="text-2xl font-semibold">You'll also love</h1>
 
-            <div className=" w-full grid gap-2 grid-cols-2 lg:grid-cols-5 py-3">
-                <Link to={'/recipe/34234'} className="flex flex-col gap-3">
-                    <div>
-                        <img src="/1.webp" alt="" />
-                    </div>
-                    <div>
-                        <p>Oven Baked BBQ</p>
-                    </div>
-                </Link>
+            <div className=" w-full grid gap-2 grid-cols-2  lg:grid-cols-4 py-5">
+                {!isFetching && similar && similar.map((s) => (
+                    <Link to={`/recipe/${s._id}`} key={s._id} className="flex flex-col gap-3 lg:w-56 h-44">
+                        <div className="w-full">
+                            <img src={s.image} alt={s.title} className="w-full" />
+                        </div>
+                        <div>
+                            <p>{s.title}</p>
+                        </div>
+                    </Link>
+                ))}
 
-                <Link to={'/recipe/34234'} className="flex flex-col gap-3">
-                    <div>
-                        <img src="/1.webp" alt="" />
-                    </div>
-                    <div>
-                        <p>Oven Baked BBQ</p>
-                    </div>
-                </Link>  <Link to={'/recipe/34234'} className="flex flex-col gap-3">
-                    <div>
-                        <img src="/1.webp" alt="" />
-                    </div>
-                    <div>
-                        <p>Oven Baked BBQ</p>
-                    </div>
-                </Link>
+
+
 
             </div>
 

@@ -6,6 +6,7 @@ const useRecipeStore = create((set) => ({
   setRecipe: (recipe) => set(recipe),
   isLoading: false,
 
+ 
   postRecipe: async (recipeData) => {
     set({ isLoading: true });
     try {
@@ -19,7 +20,7 @@ const useRecipeStore = create((set) => ({
       const data = await response.json();
       if (data.status == true) {
         set({ isLoading: false });
-        toast.success("Recipe posted")
+        toast.success("Recipe posted");
       } else {
         throw new Error(data.message);
       }
@@ -54,7 +55,7 @@ const useRecipeStore = create((set) => ({
       const recipe = await response.json();
       if (recipe.status == true) {
         set({ isLoading: false });
-        
+
         return recipe.recipe;
       } else {
         throw new Error(recipe.message);
@@ -64,9 +65,24 @@ const useRecipeStore = create((set) => ({
       set({ isLoading: false });
     }
   },
-
-  
-
+  getSimilar: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await fetch("/api/recipe/similar", {
+        method: "GET",
+      });
+      const data = await response.json();
+      if (data.status == true) {
+        return data.similar;
+      } else {
+        throw new Error(data);
+      }
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));
 
 export default useRecipeStore;

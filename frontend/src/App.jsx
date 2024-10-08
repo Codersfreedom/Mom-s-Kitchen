@@ -29,7 +29,7 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/auth' element={!user ? <AuthPage /> : <Navigate to={'/'} />} />
-        <Route path='/profile/:id' element={user ? <Profile /> : <Navigate to={'/auth'} />} />
+        <Route path='/profile/:id' element={<Profile />} />
         <Route path='/post' element={user ? <PostRecipeForm /> : <Navigate to={'/auth'} />} />
         <Route path='/recipe/:id' element={<Recipe />} />
 
