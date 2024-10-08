@@ -29,7 +29,7 @@ const useUserStore = create((set) => ({
         method: "GET",
       });
       const recipies = await response.json();
-
+      console.log(recipies)
       set({ favorites: recipies, isLoading: false });
     } catch (error) {
       console.log(error.message);

@@ -73,6 +73,24 @@ export const fetchAllRecipes = async (req, res) => {
   }
 };
 
+export const getRecipeByUserId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const recipes = await Recipe.find({ user: id, visability: "public" });
+    if (recipes.length>0) {
+      return res.status(200).json({ status: true, recipes });
+    } else {
+      return res
+        .status(404)
+        .json({ status: true, message: "User has no public recipes!",recipes:null });
+    }
+  } catch (error) {
+    console.log("Error in recipe controller ", error.message);
+    res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
 export const fetchRecipe = async (req, res) => {
   try {
     const { id } = req.params;

@@ -6,7 +6,6 @@ const useRecipeStore = create((set) => ({
   setRecipe: (recipe) => set(recipe),
   isLoading: false,
 
- 
   postRecipe: async (recipeData) => {
     set({ isLoading: true });
     try {
@@ -63,6 +62,22 @@ const useRecipeStore = create((set) => ({
     } catch (error) {
       console.log(error.message);
       set({ isLoading: false });
+    }
+  },
+  getRecipeByUserId: async (id) => {
+    try {
+      const response = await fetch(`/api/recipe/getRecipeByUserId/${id}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      
+      if (data.status == true) {
+        return data.recipes;
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   },
   getSimilar: async () => {

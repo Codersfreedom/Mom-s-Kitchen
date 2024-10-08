@@ -45,10 +45,9 @@ const Recipe = () => {
         fetchQuestions(id);
     }, [id])
 
-    console.log(user)
     const isFollowing = user?.following.some((follow) => follow._id === recipe.user)
     const isFavorite = user?.favorites.some((favorite) => favorite._id === recipe?._id)
-    console.log(isFavorite)
+  
     const handleToggleReplies = (question_id) => {
 
         setShowReplies((prev) => ({
@@ -100,7 +99,7 @@ const Recipe = () => {
     }
 
     return (
-        <div className="min-h-screen w-full p-5 ">
+        <div className="min-h-screen w-full p-5 lg:w-4/5 mx-auto ">
 
             <h1 className="text-4xl font-bold">{recipe?.title}</h1>
             <div className="flex gap-2 py-4">
@@ -116,7 +115,7 @@ const Recipe = () => {
             </div>
             <div className="flex gap-4 items-center">
                 <Button colorScheme="yellow" isLoading={isLoading} onClick={() => follow(recipe?.user)} >{isFollowing ? "Unfollow" : "Follow"}</Button>
-                <Heart className="cursor-pointer" fill={isFavorite ? "red" : "none"} onClick={() => addToFavorite(recipe?._id)} />
+                <Heart className="cursor-pointer" color="red"   fill={isFavorite ? "red" : "none"} onClick={() => addToFavorite(recipe?._id)} />
 
             </div>
             <p className="text-xl py-4">{recipe?.description}</p>
@@ -147,7 +146,7 @@ const Recipe = () => {
             <div className="lg:w-[800px] lg:h-[530px]">
                 <img src={recipe?.image} className=" h-full w-full  " alt="recipe_featured_image" />
             </div>
-
+{/* 
             <div className="grid grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-4 max-w-[800px] max-h-fit py-4">
                 <div className="lg:w-[188px] lg:h-[125px]">
                     <img src="/1.webp" alt="thumnail" className="h-full w-full" />
@@ -162,9 +161,9 @@ const Recipe = () => {
                 <div className="lg:w-[188px] lg:h-[125px] hidden lg:block">
                     <img src="/2.webp" alt="thumnail" className="h-full w-full" />
                 </div>
-            </div>
+            </div> */}
 
-            <div className="w-full lg:w-1/3">
+            <div className="w-full lg:w-1/3 mt-5">
                 <Button
                     leftIcon={<Camera />}
                     size={'lg'}
@@ -219,7 +218,7 @@ const Recipe = () => {
             <div className="flex flex-col gap-3 w-full  py-4">
                 <h1 className="text-xl font-semibold">Questions & Replies</h1>
 
-                <div className="w-full lg:w-1/2 py-2 flex flex-col gap-3">
+                <div className="w-full  py-2 flex flex-col gap-3">
                     <Input placeholder="ask a question" rounded={'15px'} value={questionData} onChange={(e) => setQuestionData(e.target.value)} />
                     {!user ? <Button colorScheme="yellow" leftIcon={<LogIn />} onClick={() => { navigate("/auth") }} > Sign in to ask a question</Button> :
                         <Button colorScheme="yellow" isLoading={isPosting} leftIcon={<Lightbulb />}
@@ -339,7 +338,7 @@ const Recipe = () => {
             {/* similar section */}
             <h1 className="text-2xl font-semibold">You'll also love</h1>
 
-            <div className=" w-full grid gap-2 grid-cols-2  lg:grid-cols-4 py-5">
+            <div className=" w-full grid gap-2 grid-cols-2 grid-rows-3  lg:grid-cols-3 py-5">
                 {!isFetching && similar && similar.map((s) => (
                     <Link to={`/recipe/${s._id}`} key={s._id} className="flex flex-col gap-3 lg:w-56 h-44">
                         <div className="w-full">

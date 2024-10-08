@@ -9,12 +9,12 @@ const RecipeCard = ({ recipe, isLoading }) => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className='lg:h-56 max-h-44 w-full lg:w-72  sm:w-full  py-5' >
-            <Link to={`/recipe/${recipe?._id}`} className='max-h-full w-full flex lg:flex-col gap-2  lg:overflow-visible overflow-hidden'>
+            className='lg:h-44 max-h-32  w-full lg:w-72  sm:w-full  ' >
+            <Link to={`/recipe/${recipe?._id}`} className='max-h-full w-full flex lg:flex-col gap-2  lg:overflow-visible overflow-hidden group'>
 
                 <Skeleton className='h-full lg:max-h-4/6 lg:w-full w-11/12 md:w-1/2 ' isLoaded={!isLoading}>
-                    <div className=' w-full h-full'>
-                        <img src={recipe?.image} alt={recipe?.title} className='w-full h-full' />
+                    <div className=' w-full h-full overflow-hidden'>
+                        <img src={recipe?.image} alt={recipe?.title} className='w-full h-full transition-transform group-hover:scale-125 duration-300 ease-in-out ' />
 
                     </div>
                 </Skeleton>
