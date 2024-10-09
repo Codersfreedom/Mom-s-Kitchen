@@ -6,18 +6,20 @@ import cors from "cors";
 import recipeRoutes from "./routes/recipe.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import edamamRoutes from "./routes/edamam.routes.js";
 import connectToDB from "./config/db.js";
 dotenv.config();
 
 const app = express();
 
-app.use(express.json({limit:"10mb"}));
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/recipe", recipeRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/edamam", edamamRoutes);
 
 const PORT = process.env.PORT;
 
