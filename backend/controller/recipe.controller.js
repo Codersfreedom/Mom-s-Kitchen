@@ -10,9 +10,25 @@ export const searchRecipe = async (req, res) => {
       `https://api.edamam.com/api/recipes/v2/?app_id=7c55c750&app_key=823ea7c60e9db793290429c0782d07ad&q=${query}&type=public`
     );
 
-    res.status(200).json(response);
+    res.status(200).json({status:true,recipes:response});
   } catch (error) {
     console.log("Error in recipe controller", error.message);
+    res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
+export const getRecipeByUri = async (req, res) => {
+  const { uri } = req.params;
+  const encodedUri = encodeURIComponent(uri);
+
+  try {
+    const requestUrl = `https://api.edamam.com/api/recipes/v2/by-uri?type=public&uri=${encodedUri}&app_id=7c55c750&app_key=823ea7c60e9db793290429c0782d07ad`;
+
+    const response = await fetchFromEdamam(requestUrl);
+
+    res.status(200).json({status:true,recipe:response});
+  } catch (error) {
+    console.log(error.message);
     res.status(500).json({ status: false, message: "Internal server error" });
   }
 };
@@ -78,12 +94,14 @@ export const getRecipeByUserId = async (req, res) => {
     const { id } = req.params;
 
     const recipes = await Recipe.find({ user: id, visability: "public" });
-    if (recipes.length>0) {
+    if (recipes.length > 0) {
       return res.status(200).json({ status: true, recipes });
     } else {
-      return res
-        .status(404)
-        .json({ status: true, message: "User has no public recipes!",recipes:null });
+      return res.status(404).json({
+        status: true,
+        message: "User has no public recipes!",
+        recipes: null,
+      });
     }
   } catch (error) {
     console.log("Error in recipe controller ", error.message);

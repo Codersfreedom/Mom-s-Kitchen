@@ -2,6 +2,8 @@ import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, IconButton, Inp
 import { BicepsFlexed, Bookmark, Camera, Clock, Download, Heart, Lightbulb, LogIn, Printer, Salad, SendHorizontalIcon, Share, Star, Trash, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
+
+
 import useRecipeStore from "../../store/useRecipeStore"
 import useAuthStore from "../../store/useAuthStore"
 import useUserStore from "../../store/useUserStore"
@@ -47,7 +49,7 @@ const Recipe = () => {
 
     const isFollowing = user?.following.some((follow) => follow._id === recipe.user)
     const isFavorite = user?.favorites.some((favorite) => favorite._id === recipe?._id)
-  
+
     const handleToggleReplies = (question_id) => {
 
         setShowReplies((prev) => ({
@@ -98,8 +100,18 @@ const Recipe = () => {
         deleteReply(questionId, answerId);
     }
 
+    const handlePrint = () => {
+        window.print()
+
+    }
+    const handleShare = () => {
+        navigator.clipboard.writeText(window.location.href);
+        toast.success("Url copied!")
+
+    }
+
     return (
-        <div className="min-h-screen w-full p-5 lg:w-4/5 mx-auto ">
+        <div className="min-h-screen w-full p-5 lg:w-4/5 mx-auto print " >
 
             <h1 className="text-4xl font-bold">{recipe?.title}</h1>
             <div className="flex gap-2 py-4">
@@ -115,29 +127,25 @@ const Recipe = () => {
             </div>
             <div className="flex gap-4 items-center">
                 <Button colorScheme="yellow" isLoading={isLoading} onClick={() => follow(recipe?.user)} >{isFollowing ? "Unfollow" : "Follow"}</Button>
-                <Heart className="cursor-pointer" color="red"   fill={isFavorite ? "red" : "none"} onClick={() => addToFavorite(recipe?._id)} />
+                <Heart className="cursor-pointer" color="red" fill={isFavorite ? "red" : "none"} onClick={() => addToFavorite(recipe?._id)} />
 
             </div>
             <p className="text-xl py-4">{recipe?.description}</p>
 
             <div className="flex gap-3 py-4">
                 <Button
-
+                    onClick={() => addToFavorite(recipe?._id)}
                 >
-                    <Bookmark /> Save
+                    <Bookmark /> {isFavorite ? "Saved" : "Save"}
                 </Button>
+               
                 <Button
-
-                >
-                    <Download /> Download
-                </Button>
-                <Button
-
+                onClick={handlePrint}
                 >
                     <Printer /> Print
                 </Button>
                 <Button
-
+                onClick={handleShare}
                 >
                     <Share /> Share
                 </Button>
@@ -146,7 +154,7 @@ const Recipe = () => {
             <div className="lg:w-[800px] lg:h-[530px]">
                 <img src={recipe?.image} className=" h-full w-full  " alt="recipe_featured_image" />
             </div>
-{/* 
+            {/* 
             <div className="grid grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-4 max-w-[800px] max-h-fit py-4">
                 <div className="lg:w-[188px] lg:h-[125px]">
                     <img src="/1.webp" alt="thumnail" className="h-full w-full" />
