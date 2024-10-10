@@ -6,11 +6,13 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import Recipe from './pages/Recipe'
 import Profile from './pages/Profile'
+import FetchedRecipe from './pages/FetchedRecipe'
 import PostRecipeForm from './pages/PostRecipeForm'
 import useAuthStore from '../store/useAuthStore'
 import { Toaster } from 'react-hot-toast';
 import Loader from './components/Loader'
 import './App.css'
+
 
 function App() {
 
@@ -31,7 +33,8 @@ function App() {
         <Route path='/auth' element={!user ? <AuthPage /> : <Navigate to={'/'} />} />
         <Route path='/profile/:id' element={<Profile />} />
         <Route path='/post' element={user ? <PostRecipeForm /> : <Navigate to={'/auth'} />} />
-        <Route path='/recipe/:id' element={<Recipe />} />
+        <Route path='/posted-recipe/:id' element={<Recipe />} />
+        <Route path='/fetched-recipe/:uri' element={<FetchedRecipe />} />
 
       </Routes>
       <Footer />

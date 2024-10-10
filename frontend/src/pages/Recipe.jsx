@@ -9,6 +9,7 @@ import useAuthStore from "../../store/useAuthStore"
 import useUserStore from "../../store/useUserStore"
 import toast from "react-hot-toast"
 import { formatDate } from "../lib/utils"
+import RecipeCard from "../components/RecipeCard"
 
 
 const Recipe = () => {
@@ -138,14 +139,14 @@ const Recipe = () => {
                 >
                     <Bookmark /> {isFavorite ? "Saved" : "Save"}
                 </Button>
-               
+
                 <Button
-                onClick={handlePrint}
+                    onClick={handlePrint}
                 >
                     <Printer /> Print
                 </Button>
                 <Button
-                onClick={handleShare}
+                    onClick={handleShare}
                 >
                     <Share /> Share
                 </Button>
@@ -346,16 +347,9 @@ const Recipe = () => {
             {/* similar section */}
             <h1 className="text-2xl font-semibold">You'll also love</h1>
 
-            <div className=" w-full grid gap-2 grid-cols-2 grid-rows-3  lg:grid-cols-3 py-5">
+            <div className=" w-full grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 py-5">
                 {!isFetching && similar && similar.map((s) => (
-                    <Link to={`/recipe/${s._id}`} key={s._id} className="flex flex-col gap-3 lg:w-56 h-44">
-                        <div className="w-full">
-                            <img src={s.image} alt={s.title} className="w-full" />
-                        </div>
-                        <div>
-                            <p>{s.title}</p>
-                        </div>
-                    </Link>
+                    <RecipeCard key={s._id} recipe={s} isLoading={isFetching} />
                 ))}
 
 

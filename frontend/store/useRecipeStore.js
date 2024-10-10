@@ -3,7 +3,6 @@ import { create } from "zustand";
 
 const useRecipeStore = create((set) => ({
   recipe: [],
-  setRecipe: (recipe) => set(recipe),
   isLoading: false,
 
   postRecipe: async (recipeData) => {

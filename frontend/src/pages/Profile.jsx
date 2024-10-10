@@ -91,7 +91,7 @@ const Profile = ({slug="posts"}) => {
                     </MenuList>
                 </Menu>
 
-                <div className='grid grid-cols-1 gap-2 lg:grid-cols-3 grid-rows-4  py-4 w-full' >
+                <div className='min-h-full w-full relative py-5 px-2 grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' >
                     {!isLoading && authUser && option === 'saved' && favorites.map((favorite) => {
                         return <RecipeCard key={favorite._id} recipe={favorite} isLoading={isLoading} />
 

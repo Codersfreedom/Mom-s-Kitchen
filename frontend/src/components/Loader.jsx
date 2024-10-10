@@ -3,6 +3,7 @@ import './Loader.css';
 const Loader = () => {
 
   return (
+	<div className='min-h-screen w-full flex items-center justify-center'>
     <svg role="img" aria-label="Mouth and eyes come from 9:00 and rotate clockwise into position, right eye blinks, then all parts rotate and merge into 3:00" className="smiley" viewBox="0 0 128 128" width="128px" height="128px">
 	<defs>
 		<clipPath id="smiley-eyes">
@@ -34,6 +35,7 @@ const Loader = () => {
 		</g>
 	</g>
 </svg>
+</div>
   )
 }
 

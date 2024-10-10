@@ -1,28 +1,35 @@
 import { useEffect } from 'react';
-import useRecipeStore from '../../store/useRecipeStore';
+
 import RecipeCard from './RecipeCard';
+import useEdamamStore from '../../store/useEdamamStore';
+import Loader from './Loader';
 
 
 const MainContent = () => {
-    const { getAllRecipes, recipe, isLoading } = useRecipeStore()
-   
+    const { getAllRecipes, recipe, isLoading } = useEdamamStore()
+
 
     useEffect(() => {
-        getAllRecipes();
+        getAllRecipes("chicken");
     }, [getAllRecipes])
 
 
 
+    if (isLoading) return <Loader />
+
 
     return (
-        <div className=' min-h-screen w-full relative p-2  lg:p-10 grid grid-cols-1 grid-rows-5 lg:grid-cols-3 gap-1 '>
-            {recipe.map((recipe) => {
+        <div className="min-h-full w-full relative p-10 grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            {recipe.map(({recipe},index) => {
 
-                return <RecipeCard key={recipe._id} recipe={recipe} isLoading={isLoading} />
+                return <RecipeCard key={index} recipe={recipe} isLoading={isLoading} />
             })}
+           
 
 
         </div>
+
+
     )
 }
 
