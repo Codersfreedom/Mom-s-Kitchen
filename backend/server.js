@@ -1,7 +1,6 @@
 import cookieParser from "cookie-parser";
 import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
 import path from "path";
 
 import recipeRoutes from "./routes/recipe.routes.js";
@@ -16,7 +15,7 @@ const __dirname = path.resolve();
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
-app.use(cors());
+
 
 app.use("/api/recipe", recipeRoutes);
 app.use("/api/auth", authRoutes);
