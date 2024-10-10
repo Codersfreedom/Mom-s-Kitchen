@@ -9,11 +9,11 @@ import theme from './theme.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <ChakraProvider>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <App />
       </ChakraProvider>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 )
