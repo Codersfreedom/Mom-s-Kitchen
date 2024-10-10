@@ -10,7 +10,10 @@ const MainContent = () => {
 
 
     useEffect(() => {
-        getAllRecipes("chicken");
+        if (recipe.length === 0) {
+            getAllRecipes("chicken");
+
+        }
     }, [getAllRecipes])
 
 
@@ -20,11 +23,11 @@ const MainContent = () => {
 
     return (
         <div className="min-h-full w-full relative p-10 grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {recipe.map(({recipe},index) => {
+            {recipe.map(({ recipe }, index) => {
 
                 return <RecipeCard key={index} recipe={recipe} isLoading={isLoading} />
             })}
-           
+
 
 
         </div>
