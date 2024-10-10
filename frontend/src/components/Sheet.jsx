@@ -53,7 +53,7 @@ const Sheet = ({ btnRef, isOpen, onClose }) => {
                                         </li>
                                         <li><Link to={'/post'}>Post Recipe </Link></li>
                                         <li>
-                                            <Link to={`/profile${user?._id}`}>
+                                            <Link to={`/profile/${user?._id}`}>
 
                                                 Profile
                                             </Link>

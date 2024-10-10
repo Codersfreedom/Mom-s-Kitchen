@@ -23,7 +23,7 @@ const Header = () => {
     }
 
     return (
-        <div className='w-full relative h-20 bg-yellow-400 flex justify-between px-4 text-gray-700'>
+        <div className='w-full relative h-16 bg-yellow-400 flex justify-between px-4 text-gray-700'>
             {!isSearch && <div className=' h-full w-fit text-nowrap flex  items-center pl-6 '>
                 <Link to={'/'} className='text-xl font-bold '>Mom's Kitchen </Link>
             </div>}
@@ -35,7 +35,7 @@ const Header = () => {
 
             {!isSearch && <div className='w-3/4 h-full hidden lg:block px-4'>
                 <ul className=' w-full h-full list-none flex justify-center items-center gap-10 text-base font-semibold    '>
-                    <li className='cursor-pointer hover:scale-110 duration-300 ease-in-out '>Recipes</li>
+                    <li className='cursor-pointer hover:scale-110 duration-300 ease-in-out '> <Link to={'/posted-recipe'}> Posted Recipes</Link></li>
                     <li className='cursor-pointer hover:scale-110 duration-300 ease-in-out '>Popular</li>
                     <li className='cursor-pointer hover:scale-110 duration-300 ease-in-out ' >Healthy</li>
                     <li className='cursor-pointer hover:scale-110 duration-300 ease-in-out '>Holidays</li>
@@ -68,7 +68,7 @@ const Header = () => {
 
             </div>
 
-            <Menu ref={btnRef} onClick={onOpen} className=' lg:hidden md:hidden absolute left-2 top-[26px] cursor-pointer' size={30} />
+            <Menu ref={btnRef} onClick={onOpen} className=' lg:hidden md:hidden absolute left-2 top-[20px] cursor-pointer' size={30} />
 
             <Sheet btnRef={btnRef} isOpen={isOpen} onClose={onClose} />
 

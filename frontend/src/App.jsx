@@ -12,6 +12,7 @@ import useAuthStore from '../store/useAuthStore'
 import { Toaster } from 'react-hot-toast';
 import Loader from './components/Loader'
 import './App.css'
+import PostedRecipe from './pages/PostedRecipe'
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <Route path='/post' element={user ? <PostRecipeForm /> : <Navigate to={'/auth'} />} />
         <Route path='/posted-recipe/:id' element={<Recipe />} />
         <Route path='/fetched-recipe/:uri' element={<FetchedRecipe />} />
+        <Route path='/posted-recipe' element={<PostedRecipe />} />
 
       </Routes>
       <Footer />

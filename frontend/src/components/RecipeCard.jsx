@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
 const RecipeCard = ({ recipe, isLoading }) => {
-  console.log(recipe)
+
 let uri = encodeURIComponent(recipe?.uri)
     return (
         <motion.div
@@ -16,7 +16,7 @@ let uri = encodeURIComponent(recipe?.uri)
             <div className="max-w-sm bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out">
       <div className="relative group">
         {isLoading ? (
-          <Skeleton height={'12rem'} /> // Skeleton Loader
+          <Skeleton height={'12rem'} isLoaded={isLoading} /> // Skeleton Loader
         ) : (
           <img
             className="w-full h-48 object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
@@ -25,9 +25,9 @@ let uri = encodeURIComponent(recipe?.uri)
             
           />
         )}
-        <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-white text-lg font-semibold p-2 text-center transition-opacity duration-300 ease-in-out group-hover:bg-opacity-80">
+        <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-white font-semibold text-sm  p-2 text-center transition-opacity duration-300 ease-in-out group-hover:bg-opacity-80">
           {
-            isLoading ? <SkeletonText noOfLines={2} /> :<p className=' text-base'> {recipe?.label || recipe?.title}</p>
+            isLoading ? <SkeletonText noOfLines={2} /> :<p> {recipe?.label || recipe?.title}</p>
           }
           
         </div>
