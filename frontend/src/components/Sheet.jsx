@@ -39,6 +39,11 @@ const Sheet = ({ btnRef, isOpen, onClose }) => {
                                     <Link to={'/'}>
                                         Home
                                     </Link>
+                                </li> 
+                                <li>
+                                    <Link to={'/posted-recipe'}>
+                                        Posted Recipe
+                                    </Link>
                                 </li>
                                 {user &&
                                     <>
