@@ -1,6 +1,6 @@
 <h1 style='text-align:center'>Mom's Kitchen👩‍🍳</h1>
 
-<img src='./public/Demo_image.jpg' />
+<img src='./frontend/public/Demo_image.jpg' />
 
 ## Tech Stack 🚀
 
